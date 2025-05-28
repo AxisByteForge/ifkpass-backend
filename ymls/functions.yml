@@ -1,0 +1,4 @@
+CreateUser:
+  handler: dist/admin/adapters/handlers/create-user.handler
+  name: ${self:service}-${self:provider.stage}-createUser
+  timeout: 900

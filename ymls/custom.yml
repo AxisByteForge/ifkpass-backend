@@ -1,0 +1,24 @@
+esbuild:
+  bundle: true
+  minify: true
+  sourcemap: true
+  external:
+    - "@aws-sdk/client-dynamodb"
+    - "@aws-sdk/lib-dynamodb"
+    - "@aws-sdk/client-ses"
+  target: "node20"
+  platform: "node"
+
+environment: ${file(./ymls/environment.yml)}
+functions:   ${file(./ymls/functions.yml)}
+resources:   ${file(./ymls/resources.yml)}
+
+REGION:
+  dev: us-east-1
+  hml: us-east-1
+  prd: us-east-1
+
+ACCOUNT_ID:
+  dev: 999999999999
+  hml: 999999999999
+  prd: 999999999999
