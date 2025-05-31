@@ -1,10 +1,10 @@
 import { PutItemCommand, QueryCommand } from '@aws-sdk/client-dynamodb';
 import { marshall, unmarshall } from '@aws-sdk/util-dynamodb';
 
-import { Config } from '../../../shared/lib/env/get-env';
-import { DynamoClient } from '../../../shared/modules/database/dynamo-db';
-import { User } from '../../core/entity/User.entity';
-import { UserRepository } from '../repositories/AdminRepository';
+import { Config } from '../../shared/lib/env/get-env';
+import { DynamoClient } from '../../shared/modules/database/dynamo-db';
+import { UserRepository } from '../core/entity/repositories/UserRepository';
+import { User } from '../core/entity/User.entity';
 
 const config = new Config();
 
@@ -12,7 +12,7 @@ class DynamoUserRepository implements UserRepository {
   private readonly tableName;
 
   constructor(private dynamoClient: DynamoClient) {
-    this.tableName = `${config.get('ADMIN_TABLE_NAME')}-${config.get('STAGE')}`;
+    this.tableName = `${config.get('USERS_TABLE_NAME')}-${config.get('STAGE')}`;
   }
 
   public async findByEmail(email: string): Promise<User | null> {
@@ -30,12 +30,11 @@ class DynamoUserRepository implements UserRepository {
 
     if (!item) return null;
 
-    return new User({
+    return User.create({
       name: item.name,
+      lastName: item.name,
       email: item.email,
       password: item.password,
-      phone: item.phone,
-      description: item.description,
     });
   }
 

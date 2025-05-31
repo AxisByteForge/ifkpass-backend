@@ -4,13 +4,15 @@ import {
   CreateAdminUseCaseResponse,
 } from './interfaces/create-admin.use-case.interface';
 import { CryptographyAdapter } from '../../adapters/cryptography/cryptography-adapter';
-import { DynamoUserRepository } from '../../infra/persitence/dynamo-admin.repository';
+import { MailServiceAdapter } from '../../adapters/mail/mail-adapter';
+import { UserRepository } from '../entity/repositories/UserRepository';
 import { User } from '../entity/User.entity';
 
 export class CreateUserUseCase {
   constructor(
-    private adminRepository: DynamoUserRepository,
+    private adminRepository: UserRepository,
     private cryptography: CryptographyAdapter,
+    private mailService: MailServiceAdapter,
   ) {}
 
   async execute({
@@ -26,12 +28,19 @@ export class CreateUserUseCase {
 
     const hash = await this.cryptography.hash(props.password);
 
-    const admin = User.create({ ...props, password: hash });
+    const user = User.create({ ...props, password: hash });
 
-    await this.adminRepository.create(admin);
+    await this.adminRepository.create(user);
+
+    const isVerify = await this.mailService.send({
+      email: user.email,
+      verifyCode: user.emailVerificationCode,
+    });
+
+    console.log(isVerify);
 
     return {
-      admin,
+      user,
     };
   }
 }

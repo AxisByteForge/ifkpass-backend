@@ -6,11 +6,11 @@ import fs from 'fs';
 import path from 'path';
 import readline from 'readline';
 
-import { handler } from '../src/admin/adapters/handlers/create-admin';
+import { handler } from '../src/user/adapters/handlers/create-user';
 
 const filePath = path.resolve(
   __dirname,
-  '../.vscode/payloads/admins.seed.jsonl',
+  '../.vscode/payloads/users.seed.jsonl',
 );
 
 async function run() {

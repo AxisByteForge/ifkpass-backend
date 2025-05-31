@@ -5,5 +5,4 @@ export const registerDto = z.object({
   lastName: z.string(),
   email: z.string().email(),
   password: z.string(),
-  phone: z.string(),
 });

@@ -5,5 +5,5 @@ export const envs = {
   NODE_ENV: z.enum(['dev', 'test', 'prd']).default('dev'),
   REGION: z.string().default('us-east-1'),
   STAGE: z.string().default('dev'),
-  ADMIN_TABLE_NAME: z.string(),
+  USERS_TABLE_NAME: z.string(),
 };
