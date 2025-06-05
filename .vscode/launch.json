@@ -19,6 +19,25 @@
       "outFiles": ["${workspaceFolder}/dist/**/*.js"],
       "sourceMaps": true,
       "skipFiles": ["<node_internals>/**"]
+    },
+     {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug Lambda: VerifyEmail",
+      "program": "${workspaceFolder}/node_modules/.bin/sls",
+      "args": [
+        "invoke",
+        "local",
+        "-f",
+        "VerifyEmail",
+        "-p",
+        "${workspaceFolder}/.vscode/payloads/verify-email-payload.json"
+      ],
+      "console": "integratedTerminal",
+      "preLaunchTask": "build:dev",
+      "outFiles": ["${workspaceFolder}/dist/**/*.js"],
+      "sourceMaps": true,
+      "skipFiles": ["<node_internals>/**"]
     }
   ]
 }

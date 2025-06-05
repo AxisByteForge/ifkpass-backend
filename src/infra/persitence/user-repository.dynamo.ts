@@ -42,6 +42,7 @@ class DynamoUserRepository implements UserRepository {
       lastName: item.name,
       email: item.email,
       password: item.password,
+      emailVerificationCode: item.emailVerificationCode,
     });
   }
 
