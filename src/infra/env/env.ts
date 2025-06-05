@@ -6,4 +6,5 @@ export const envs = {
   REGION: z.string().default('us-east-1'),
   STAGE: z.string().default('dev'),
   USERS_TABLE_NAME: z.string(),
+  RESEND_MAIL_API_KEY: z.string(),
 };

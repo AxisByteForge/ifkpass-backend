@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const registerDto = z.object({
+export const registerValidate = z.object({
   name: z.string(),
   lastName: z.string(),
   email: z.string().email(),

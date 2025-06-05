@@ -1,5 +1,5 @@
-import { User } from '../../entity/User.entity';
-import { UserAlreadyExistsException } from '../errors/user-already-exists-exception';
+import { User } from '../../domain/entities/User.entity';
+import { UserAlreadyExistsException } from '../../domain/errors/user-already-exists-exception';
 
 interface CreateAdminUseCaseRequest {
   props: Pick<User, 'name' | 'lastName' | 'email' | 'password'>;

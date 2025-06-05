@@ -1,18 +1,25 @@
-import { PutItemCommand, QueryCommand } from '@aws-sdk/client-dynamodb';
+import {
+  DynamoDBClient,
+  PutItemCommand,
+  QueryCommand,
+} from '@aws-sdk/client-dynamodb';
 import { marshall, unmarshall } from '@aws-sdk/util-dynamodb';
 
-import { Config } from '../../shared/lib/env/get-env';
-import { DynamoClient } from '../../shared/modules/database/dynamo-db';
-import { UserRepository } from '../core/entity/repositories/UserRepository';
-import { User } from '../core/entity/User.entity';
+import { User } from '../../core/user/domain/entities/User.entity';
+import { UserRepository } from '../../core/user/domain/repositories/UserRepository';
+import { Config } from '../../infra/env/get-env';
 
 const config = new Config();
 
 class DynamoUserRepository implements UserRepository {
   private readonly tableName;
+  private readonly dynamoClient: DynamoDBClient;
 
-  constructor(private dynamoClient: DynamoClient) {
+  constructor() {
     this.tableName = `${config.get('USERS_TABLE_NAME')}-${config.get('STAGE')}`;
+    this.dynamoClient = new DynamoDBClient({
+      region: config.get('REGION'),
+    });
   }
 
   public async findByEmail(email: string): Promise<User | null> {
@@ -25,7 +32,7 @@ class DynamoUserRepository implements UserRepository {
       },
     });
 
-    const response = await this.dynamoClient.sendCommand(command);
+    const response = await this.dynamoClient.send(command);
     const item = response.Items?.[0] ? unmarshall(response.Items[0]) : null;
 
     if (!item) return null;
@@ -49,7 +56,7 @@ class DynamoUserRepository implements UserRepository {
       Item: item,
     });
 
-    await this.dynamoClient.sendCommand(command);
+    await this.dynamoClient.send(command);
   }
 }
 

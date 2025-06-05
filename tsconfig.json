@@ -20,6 +20,6 @@
     "allowJs": false,
     "types": ["vitest/globals", "vitest", "node"]
   },
-  "include": ["./src/**/*.ts"],
+  "include": ["./src/**/*.ts", "src/core/user/application/use-cases/verify-email.use-casets", "src/core/user/application/use-cases/create-user/create-user.use-casets"],
   "exclude": ["node_modules", "dist"]
 }
