@@ -4,9 +4,9 @@ import { User } from '../../domain/entities/User.entity';
 import { UserAlreadyExistsException } from '../../domain/errors/user-already-exists-exception';
 import { UserRepository } from '../../domain/repositories/UserRepository';
 import {
-  CreateAdminUseCaseRequest,
-  CreateAdminUseCaseResponse,
-} from '../dto/create-admin.use-case.interface';
+  CreateUserUseCaseRequest,
+  CreateUserUseCaseResponse,
+} from '../dto/create-user.use-case.interface';
 
 export class CreateUserUseCase {
   constructor(
@@ -17,7 +17,7 @@ export class CreateUserUseCase {
 
   async execute({
     props,
-  }: CreateAdminUseCaseRequest): Promise<CreateAdminUseCaseResponse> {
+  }: CreateUserUseCaseRequest): Promise<CreateUserUseCaseResponse> {
     const userAlreadyExists = await this.adminRepository.findByEmail(
       props.email,
     );

@@ -6,7 +6,7 @@ import fs from 'fs';
 import path from 'path';
 import readline from 'readline';
 
-import { handler } from '../src/user/adapters/handlers/create-user';
+import { handler } from '../src/presentation/handlers/create-user';
 
 const filePath = path.resolve(
   __dirname,
@@ -29,13 +29,13 @@ async function run() {
       headers: {},
       httpMethod: 'POST',
       isBase64Encoded: false,
-      path: '/admin',
+      path: '/user',
       pathParameters: null,
       queryStringParameters: null,
       multiValueHeaders: {},
       multiValueQueryStringParameters: null,
       requestContext: {} as any,
-      resource: '/admin',
+      resource: '/user',
       stageVariables: null,
     };
 

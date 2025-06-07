@@ -2,9 +2,10 @@
   "name": "ifkpass-backend",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "build:dev": "tsup",
-    "build:prod": "tsup src/**/handlers/*.ts --minify --dts --clean",
+    "build:dev": "tsup --config tsup.dev.config.ts",
+    "build:prod": "tsup --config tsup.prod.config.ts",
     "lint": "eslint src --fix",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -12,7 +13,7 @@
     "test:ui": "vitest --ui"
   },
   "engines": {
-    "node": ">=20",
+    "node": ">=22",
     "npm": ">=10"
   },
   "keywords": [],
@@ -20,7 +21,7 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
-    "@tsconfig/node20": "^20.1.5",
+    "@tsconfig/node22": "^22.0.2",
     "@types/aws-lambda": "^8.10.147",
     "@types/node": "^22.15.3",
     "@typescript-eslint/eslint-plugin": "^8.24.0",
@@ -39,7 +40,8 @@
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.24.0",
     "vite-tsconfig-paths": "^5.1.4",
-    "vitest": "^3.0.5"
+    "vitest": "^3.0.5",
+    "eslint-plugin-n": "^17.15.1"
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.799.0",
@@ -50,7 +52,6 @@
     "aws-lambda": "^1.0.7",
     "bcrypt": "^5.1.1",
     "dotenv": "^16.4.7",
-    "eslint-plugin-n": "^17.15.1",
     "resend": "^4.5.1",
     "unplugin-swc": "^1.5.1",
     "zod": "^3.24.2"

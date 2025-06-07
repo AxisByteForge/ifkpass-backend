@@ -1,14 +1,13 @@
 {
-  "extends": "@tsconfig/node20/tsconfig.json",
+  "extends": "@tsconfig/node22/tsconfig.json",
   "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "bundler",
     "noImplicitAny": true,
     "noUnusedParameters": true,
     "noUnusedLocals": true,
     "noImplicitThis": true,
     "noImplicitReturns": true,
-    "module": "nodenext",
-    "target": "es2022",
-    "moduleResolution": "node16",
     "sourceMap": true,
     "outDir": "./dist",
     "strict": true,
@@ -18,8 +17,17 @@
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "allowJs": false,
-    "types": ["vitest/globals", "vitest", "node"]
+    "types": [
+      "vitest/globals",
+      "vitest",
+      "node"
+    ]
   },
-  "include": ["./src/**/*.ts", "src/core/user/application/use-cases/verify-email.use-casets", "src/core/user/application/use-cases/create-user/create-user.use-casets"],
-  "exclude": ["node_modules", "dist"]
+  "include": [
+    "./src/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }

@@ -9,14 +9,14 @@ import {
 
 export class VerifyEmailUseCase {
   constructor(
-    private adminRepository: UserRepository,
+    private userRepository: UserRepository,
     private cryptography: CryptographyAdapter,
   ) {}
 
   async execute({
     props,
   }: VerifyEmailUseCaseRequest): Promise<VerifyEmailUseCaseResponse> {
-    const userAlreadyExists = await this.adminRepository.findByEmail(
+    const userAlreadyExists = await this.userRepository.findByEmail(
       props.email,
     );
 
@@ -27,7 +27,7 @@ export class VerifyEmailUseCase {
       props.emailVerificationCode,
     );
 
-    console.log(hashedPassword);
+    // const userAlreadyExists = await this.userRepository;
 
     return {
       ok: true,
