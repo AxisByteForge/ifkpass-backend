@@ -1,5 +1,4 @@
 import { CryptographyAdapter } from '../../../../adapters/cryptography/cryptography-adapter';
-import { User } from '../../domain/entities/User.entity';
 import { UserAlreadyExistsException } from '../../domain/errors/user-already-exists-exception';
 import { UserRepository } from '../../domain/repositories/UserRepository';
 import {
@@ -16,21 +15,28 @@ export class VerifyEmailUseCase {
   async execute({
     props,
   }: VerifyEmailUseCaseRequest): Promise<VerifyEmailUseCaseResponse> {
-    const userAlreadyExists = await this.userRepository.findByEmail(
-      props.email,
-    );
+    const user = await this.userRepository.findByEmail(props.email);
 
-    const code = userAlreadyExists?.emailVerificationCode || '';
+    if (!user) {
+      throw new UserAlreadyExistsException(props.email);
+    }
 
-    const hashedPassword = await this.cryptography.compare(
+    const code = user?.emailVerificationCode || '';
+
+    const isVerifedCode = await this.cryptography.compare(
       code,
       props.emailVerificationCode,
     );
 
-    // const userAlreadyExists = await this.userRepository;
+    await this.userRepository.updateEmailVerificationStatus(
+      user?.userId,
+      isVerifedCode,
+    );
 
     return {
-      ok: true,
+      message: 'Email is verifed sucessfully',
+      email: user.email,
+      success: true,
     };
   }
 }

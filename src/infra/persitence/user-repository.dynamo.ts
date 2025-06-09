@@ -2,6 +2,7 @@ import {
   DynamoDBClient,
   PutItemCommand,
   QueryCommand,
+  UpdateItemCommand,
 } from '@aws-sdk/client-dynamodb';
 import { marshall, unmarshall } from '@aws-sdk/util-dynamodb';
 
@@ -38,6 +39,7 @@ class DynamoUserRepository implements UserRepository {
     if (!item) return null;
 
     return User.create({
+      userId: item.userId,
       name: item.name,
       lastName: item.name,
       email: item.email,
@@ -46,8 +48,8 @@ class DynamoUserRepository implements UserRepository {
     });
   }
 
-  public async create(admin: User): Promise<void> {
-    const item = marshall(admin, {
+  public async create(user: User): Promise<void> {
+    const item = marshall(user, {
       convertClassInstanceToMap: true,
       removeUndefinedValues: true,
     });
@@ -55,6 +57,25 @@ class DynamoUserRepository implements UserRepository {
     const command = new PutItemCommand({
       TableName: this.tableName,
       Item: item,
+    });
+
+    await this.dynamoClient.send(command);
+  }
+
+  public async updateEmailVerificationStatus(
+    userId: string,
+    isVerified: boolean,
+  ): Promise<void> {
+    const command = new UpdateItemCommand({
+      TableName: this.tableName,
+      Key: {
+        userId: { S: userId },
+      },
+      UpdateExpression: 'SET isEmailVerified = :isVerified',
+      ExpressionAttributeValues: marshall({
+        ':isVerified': isVerified,
+      }),
+      ConditionExpression: 'attribute_exists(userId)',
     });
 
     await this.dynamoClient.send(command);
