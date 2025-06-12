@@ -1,5 +1,11 @@
 import { factory } from './factory';
 import { verifyEmailValidate } from './validate';
+import {
+  BadRequestException,
+  ConflictException,
+} from '../../../../core/user/domain/errors/http-errors';
+import { UserAlreadyExistsException } from '../../../../core/user/domain/errors/user-already-exists-exception';
+import { VerificationCodeDoesNotMatchException } from '../../../../core/user/domain/errors/verification-code-does-not-match';
 
 async function verifyEmail(event: any): Promise<any> {
   const body = JSON.parse(event.body || '{}');
@@ -11,7 +17,7 @@ async function verifyEmail(event: any): Promise<any> {
     return {
       statusCode: 400,
       body: JSON.stringify({
-        message: 'Erro de validação',
+        message: 'Validation Error',
         errors: fieldErrors,
       }),
     };
@@ -19,11 +25,24 @@ async function verifyEmail(event: any): Promise<any> {
 
   const useCase = factory();
 
-  const result = await useCase.execute({ props: parsed.data });
+  const response = await useCase.execute({ props: parsed.data });
+
+  if (response.isLeft()) {
+    const error = response.value;
+
+    switch (error.constructor) {
+      case UserAlreadyExistsException:
+        throw new ConflictException(error.message);
+      case VerificationCodeDoesNotMatchException:
+        throw new BadRequestException(error.message);
+      default:
+        throw new BadRequestException(error.message);
+    }
+  }
 
   return {
     statusCode: 201,
-    body: JSON.stringify(result),
+    body: JSON.stringify(response.value),
   };
 }
 

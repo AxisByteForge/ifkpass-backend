@@ -6,12 +6,12 @@ import {
 } from '@aws-sdk/client-dynamodb';
 import { marshall, unmarshall } from '@aws-sdk/util-dynamodb';
 
+import { UserMapper } from './mappers/user.mapper';
 import { User } from '../../core/user/domain/entities/User.entity';
 import { UserRepository } from '../../core/user/domain/repositories/UserRepository';
 import { Config } from '../../infra/env/get-env';
 
 const config = new Config();
-
 class DynamoUserRepository implements UserRepository {
   private readonly tableName;
   private readonly dynamoClient: DynamoDBClient;
@@ -38,19 +38,13 @@ class DynamoUserRepository implements UserRepository {
 
     if (!item) return null;
 
-    return User.create({
-      userId: item.userId,
-      name: item.name,
-      lastName: item.name,
-      email: item.email,
-      password: item.password,
-      emailVerificationCode: item.emailVerificationCode,
-    });
+    return UserMapper.toDomain(item);
   }
 
   public async create(user: User): Promise<void> {
-    const item = marshall(user, {
-      convertClassInstanceToMap: true,
+    const persistenceProps = UserMapper.toPersistence(user);
+
+    const item = marshall(persistenceProps, {
       removeUndefinedValues: true,
     });
 

@@ -1,10 +1,12 @@
 import { CryptographyAdapter } from '../../../../adapters/cryptography/cryptography-adapter';
+import { left, right } from '../../../either';
 import { UserAlreadyExistsException } from '../../domain/errors/user-already-exists-exception';
+import { VerificationCodeDoesNotMatchException } from '../../domain/errors/verification-code-does-not-match';
 import { UserRepository } from '../../domain/repositories/UserRepository';
 import {
   VerifyEmailUseCaseRequest,
   VerifyEmailUseCaseResponse,
-} from '../dto/verify-email.use-case.interface';
+} from '../interfaces/verify-email.use-case.interface';
 
 export class VerifyEmailUseCase {
   constructor(
@@ -28,15 +30,18 @@ export class VerifyEmailUseCase {
       props.emailVerificationCode,
     );
 
+    if (!isVerifedCode) {
+      return left(new VerificationCodeDoesNotMatchException());
+    }
+
     await this.userRepository.updateEmailVerificationStatus(
       user?.userId,
       isVerifedCode,
     );
 
-    return {
-      message: 'Email is verifed sucessfully',
-      email: user.email,
-      success: true,
-    };
+    return right({
+      ok: true,
+      message: 'Email verification sent',
+    });
   }
 }

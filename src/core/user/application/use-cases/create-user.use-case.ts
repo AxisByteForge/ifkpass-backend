@@ -1,12 +1,13 @@
 import { CryptographyAdapter } from '../../../../adapters/cryptography/cryptography-adapter';
 import { MailServiceAdapter } from '../../../../adapters/mail/mail-adapter';
+import { left, right } from '../../../either';
 import { User } from '../../domain/entities/User.entity';
 import { UserAlreadyExistsException } from '../../domain/errors/user-already-exists-exception';
 import { UserRepository } from '../../domain/repositories/UserRepository';
 import {
   CreateUserUseCaseRequest,
   CreateUserUseCaseResponse,
-} from '../dto/create-user.use-case.interface';
+} from '../interfaces/create-user.use-case.interface';
 
 export class CreateUserUseCase {
   constructor(
@@ -23,11 +24,12 @@ export class CreateUserUseCase {
     );
 
     if (userAlreadyExists) {
-      return new UserAlreadyExistsException(props.email);
+      return left(new UserAlreadyExistsException(props.email));
     }
 
     const hashedPassword = await this.cryptography.hash(props.password);
     const verificationCode = User.generateVerificationCode();
+
     const hashedVerificationCode =
       await this.cryptography.hash(verificationCode);
 
@@ -44,8 +46,6 @@ export class CreateUserUseCase {
       verifyCode: verificationCode,
     });
 
-    return {
-      user,
-    };
+    return right({});
   }
 }
