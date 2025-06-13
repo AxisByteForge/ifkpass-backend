@@ -1,15 +1,16 @@
 import { Either } from '../../../either';
-import { User } from '../../domain/entities/User.entity';
+import { EmailAlreadyVerifiedException } from '../../domain/errors/email-already-verified-exception';
 import { UserAlreadyExistsException } from '../../domain/errors/user-already-exists-exception';
-import { VerificationCodeDoesNotMatchException } from '../../domain/errors/verification-code-does-not-match';
 
 interface VerifyEmailUseCaseRequest {
-  props: Pick<User, 'email' | 'emailVerificationCode'>;
+  email: string;
+  code: string;
+  password: string;
 }
 
 type VerifyEmailUseCaseResponse = Either<
-  UserAlreadyExistsException | VerificationCodeDoesNotMatchException,
-  { ok: boolean; message: string }
+  UserAlreadyExistsException | EmailAlreadyVerifiedException,
+  { statusCode: number; token: string }
 >;
 
 export { VerifyEmailUseCaseRequest, VerifyEmailUseCaseResponse };

@@ -1,11 +1,16 @@
 import { Either } from '../../../either';
-import { User } from '../../domain/entities/User.entity';
 import { UserAlreadyExistsException } from '../../domain/errors/user-already-exists-exception';
 
-interface CreateUserUseCaseRequest {
-  props: Pick<User, 'name' | 'lastName' | 'email' | 'password'>;
+export interface CreateUserUseCaseRequest {
+  props: {
+    name: string;
+    lastName: string;
+    email: string;
+    password: string;
+  };
 }
 
-type CreateUserUseCaseResponse = Either<UserAlreadyExistsException, object>;
-
-export { CreateUserUseCaseRequest, CreateUserUseCaseResponse };
+export type CreateUserUseCaseResponse = Either<
+  UserAlreadyExistsException,
+  object
+>;

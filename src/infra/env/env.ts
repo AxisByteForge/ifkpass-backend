@@ -5,6 +5,6 @@ export const envs = {
   NODE_ENV: z.enum(['dev', 'test', 'prd']).default('dev'),
   REGION: z.string().default('us-east-1'),
   STAGE: z.string().default('dev'),
-  USERS_TABLE_NAME: z.string(),
+  PROFILES_TABLE_NAME: z.string(),
   RESEND_MAIL_API_KEY: z.string(),
 };

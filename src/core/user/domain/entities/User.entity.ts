@@ -5,50 +5,31 @@ export interface UserProps {
   name: string;
   lastName: string;
   email: string;
-  password: string;
-  emailVerificationCode: string;
-  emailVerificationExpires: string;
-  isEmailVerified: boolean;
   createdAt: string;
 }
 
 export class User {
   readonly userId: string;
   readonly createdAt: string;
-  readonly emailVerificationExpires: string;
-  readonly isEmailVerified: boolean;
-  readonly emailVerificationCode: string;
   readonly name: string;
   readonly lastName: string;
   readonly email: string;
-  readonly password: string;
 
   private constructor(props: UserProps) {
     this.userId = props.userId;
     this.createdAt = props.createdAt;
-    this.emailVerificationExpires = props.emailVerificationExpires;
-    this.isEmailVerified = props.isEmailVerified;
-    this.emailVerificationCode = props.emailVerificationCode;
     this.name = props.name;
     this.lastName = props.lastName;
     this.email = props.email;
-    this.password = props.password;
   }
 
   static create(
-    props: Omit<
-      UserProps,
-      'userId' | 'createdAt' | 'emailVerificationExpires' | 'isEmailVerified'
-    >,
+    props: Omit<UserProps, 'userId' | 'createdAt' | 'emailVerificationExpires'>,
   ): User {
     return new User({
       ...props,
       userId: randomUUID(),
       createdAt: new Date().toISOString(),
-      emailVerificationExpires: new Date(
-        Date.now() + 15 * 60 * 1000,
-      ).toISOString(),
-      isEmailVerified: false,
     });
   }
 
@@ -66,13 +47,9 @@ export class User {
     return {
       userId: this.userId,
       createdAt: this.createdAt,
-      emailVerificationExpires: this.emailVerificationExpires,
-      isEmailVerified: this.isEmailVerified,
-      emailVerificationCode: this.emailVerificationCode,
       name: this.name,
       lastName: this.lastName,
       email: this.email,
-      password: this.password,
     };
   }
 }

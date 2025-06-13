@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   User,
   UserProps,
@@ -8,7 +9,8 @@ export class UserMapper {
     return User.fromPersistence(raw as Required<UserProps>);
   }
 
-  static toPersistence(user: User): UserProps {
-    return user.getProps();
+  static toPersistence(user: User): Omit<UserProps, 'password'> {
+    const { password, ...rest } = user.getProps();
+    return rest;
   }
 }

@@ -1,7 +1,7 @@
-import { CryptographyAdapter } from '../../../../adapters/cryptography/cryptography-adapter';
+import { IdentityProviderServiceAdapter } from '../../../../adapters/aws/aws-cognito-adapter';
 import { left, right } from '../../../either';
-import { UserAlreadyExistsException } from '../../domain/errors/user-already-exists-exception';
-import { VerificationCodeDoesNotMatchException } from '../../domain/errors/verification-code-does-not-match';
+import { EmailAlreadyVerifiedException } from '../../domain/errors/email-already-verified-exception';
+import { UserNotFoundException } from '../../domain/errors/user-not-found-exception';
 import { UserRepository } from '../../domain/repositories/UserRepository';
 import {
   VerifyEmailUseCaseRequest,
@@ -11,37 +11,35 @@ import {
 export class VerifyEmailUseCase {
   constructor(
     private userRepository: UserRepository,
-    private cryptography: CryptographyAdapter,
+    private identityProvider: IdentityProviderServiceAdapter,
   ) {}
 
   async execute({
-    props,
+    code,
+    email,
+    password,
   }: VerifyEmailUseCaseRequest): Promise<VerifyEmailUseCaseResponse> {
-    const user = await this.userRepository.findByEmail(props.email);
+    const user = await this.userRepository.findByEmail(email);
 
     if (!user) {
-      throw new UserAlreadyExistsException(props.email);
+      throw new UserNotFoundException(email);
     }
 
-    const code = user?.emailVerificationCode || '';
-
-    const isVerifedCode = await this.cryptography.compare(
-      code,
-      props.emailVerificationCode,
+    const isEmailVerified = await this.identityProvider.isEmailVerified(
+      user.email,
     );
 
-    if (!isVerifedCode) {
-      return left(new VerificationCodeDoesNotMatchException());
+    if (isEmailVerified) {
+      return left(new EmailAlreadyVerifiedException(email));
     }
 
-    await this.userRepository.updateEmailVerificationStatus(
-      user?.userId,
-      isVerifedCode,
-    );
+    await this.identityProvider.confirmEmail(user.email, code);
+
+    const token = await this.identityProvider.signIn(email, password);
 
     return right({
-      ok: true,
-      message: 'Email verification sent',
+      statusCode: 200,
+      token,
     });
   }
 }

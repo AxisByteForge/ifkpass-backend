@@ -1,5 +1,4 @@
-import { CryptographyAdapter } from '../../../../adapters/cryptography/cryptography-adapter';
-import { MailServiceAdapter } from '../../../../adapters/mail/mail-adapter';
+import { IdentityProviderServiceAdapter } from '../../../../adapters/aws/aws-cognito-adapter';
 import { left, right } from '../../../either';
 import { User } from '../../domain/entities/User.entity';
 import { UserAlreadyExistsException } from '../../domain/errors/user-already-exists-exception';
@@ -12,8 +11,7 @@ import {
 export class CreateUserUseCase {
   constructor(
     private adminRepository: UserRepository,
-    private cryptography: CryptographyAdapter,
-    private mailService: MailServiceAdapter,
+    private identityProvider: IdentityProviderServiceAdapter,
   ) {}
 
   async execute({
@@ -27,24 +25,13 @@ export class CreateUserUseCase {
       return left(new UserAlreadyExistsException(props.email));
     }
 
-    const hashedPassword = await this.cryptography.hash(props.password);
-    const verificationCode = User.generateVerificationCode();
-
-    const hashedVerificationCode =
-      await this.cryptography.hash(verificationCode);
-
     const user = User.create({
       ...props,
-      password: hashedPassword,
-      emailVerificationCode: hashedVerificationCode,
     });
+
+    await this.identityProvider.signUp(user.userId, props.password);
 
     await this.adminRepository.create(user);
-
-    await this.mailService.send({
-      email: user.email,
-      verifyCode: verificationCode,
-    });
 
     return right({});
   }

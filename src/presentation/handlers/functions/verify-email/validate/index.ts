@@ -5,4 +5,5 @@ export const verifyEmailValidate = z.object({
   emailVerificationCode: z.string().regex(/^\d{6}$/, {
     message: 'O código deve conter exatamente 6 números',
   }),
+  password: z.string(),
 });

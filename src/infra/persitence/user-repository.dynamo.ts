@@ -17,7 +17,7 @@ class DynamoUserRepository implements UserRepository {
   private readonly dynamoClient: DynamoDBClient;
 
   constructor() {
-    this.tableName = `${config.get('USERS_TABLE_NAME')}-${config.get('STAGE')}`;
+    this.tableName = `${config.get('PROFILES_TABLE_NAME')}-${config.get('STAGE')}`;
     this.dynamoClient = new DynamoDBClient({
       region: config.get('REGION'),
     });

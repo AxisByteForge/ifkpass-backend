@@ -1,5 +1,5 @@
 {
-  "body": "{\"name\":\"John\",\"lastName\":\"Doe\",\"email\":\"barretoruan77@gmail.com\",\"password\":\"abc123\",\"cpf\":\"123.456.789-00\",\"birthDate\":\"1990-01-01\",\"city\":\"São Paulo\",\"dojo\":\"Dojo Central\"}",
+  "body": "{\"name\":\"John\",\"lastName\":\"Doe\",\"email\":\"barretoruan77@gmail.com\",\"password\":\"ifkPass@Admin2025\",\"cpf\":\"123.456.789-00\",\"birthDate\":\"1990-01-01\",\"city\":\"São Paulo\",\"dojo\":\"Dojo Central\"}",
   "httpMethod": "POST",
   "path": "/create-user",
   "headers": {
