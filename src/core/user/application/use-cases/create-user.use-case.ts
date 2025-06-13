@@ -29,7 +29,7 @@ export class CreateUserUseCase {
       ...props,
     });
 
-    await this.identityProvider.signUp(user.userId, props.password);
+    await this.identityProvider.signUp(user.email, props.password);
 
     await this.adminRepository.create(user);
 
