@@ -1,5 +1,5 @@
 {
-  "body": "{\"email\":\"barretoruan77@gmail.com\",\"emailVerificationCode\":\"666711\",\"password\":\"ifkPass@Admin2025\"}",
+  "body": "{\"email\":\"barretoruan77@gmail.com\",\"emailVerificationCode\":\"724920\",\"password\":\"ifkPass@Admin2025\"}",
   "httpMethod": "POST",
   "path": "/verify-email",
   "headers": {

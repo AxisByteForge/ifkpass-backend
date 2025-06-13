@@ -22,9 +22,9 @@ export class AwsCognitoService implements IdentityProviderServiceAdapter {
     this.cognitoClient = new CognitoIdentityProviderClient({
       region: config.get('REGION'),
     });
-    this.clientId = '43bls7ljiq3rikth771bj0p8bn';
-    this.secret = 'aadhf0tph3plapfegdvd7lnbnrpa0qe7l9l42jkrqthnkpnjmli';
-    this.userPoolId = 'us-east-1_mhHsXcE8M';
+    this.clientId = '5t2ev7jjncg5cgn7vaq6vpm6dg';
+    this.secret = '4q5te8k161eppget5ffnqlgdsf6kq00stm07tj256um2bt5gc5n';
+    this.userPoolId = 'us-east-1_HgPECUwQR';
   }
 
   private generateSecretHash(
