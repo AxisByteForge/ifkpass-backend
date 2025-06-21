@@ -1,22 +1,23 @@
 import {
-  CreateUserUseCaseRequest,
-  CreateUserUseCaseResponse,
-} from './interfaces/create-user.use-case.interface';
+  CreateProfileUseCaseRequest,
+  CreateProfileUseCaseResponse,
+} from './interfaces/create-profile.use-case.interface';
 import { IdentityProviderServiceAdapter } from '../../domain/adapters/aws/aws-cognito-adapter';
 import { left, right } from '../../domain/either';
 import { User } from '../../domain/entities/User.entity';
 import { UserAlreadyExistsException } from '../../domain/errors/user-already-exists-exception';
 import { UserRepository } from '../../domain/repositories/UserRepository';
 
-export class CreateUserUseCase {
+export class CreateProfileUseCase {
   constructor(
     private userRepository: UserRepository,
     private identityProvider: IdentityProviderServiceAdapter,
   ) {}
 
   async execute({
-    props,
-  }: CreateUserUseCaseRequest): Promise<CreateUserUseCaseResponse> {
+    body,
+    headers,
+  }: CreateProfileUseCaseRequest): Promise<CreateProfileUseCaseResponse> {
     const userAlreadyExists = await this.userRepository.findByEmail(
       props.email,
     );

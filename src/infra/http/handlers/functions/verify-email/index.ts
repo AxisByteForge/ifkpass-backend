@@ -1,3 +1,5 @@
+import { APIGatewayProxyEvent } from 'aws-lambda';
+
 import { factory } from './factory';
 import { verifyEmailValidate } from './validate';
 import { EmailAlreadyVerifiedException } from '../../../../../core/domain/errors/email-already-verified-exception';
@@ -7,7 +9,7 @@ import {
 } from '../../../../../core/domain/errors/http-errors';
 import { UserAlreadyExistsException } from '../../../../../core/domain/errors/user-already-exists-exception';
 
-async function verifyEmail(event: any): Promise<any> {
+async function verifyEmail(event: APIGatewayProxyEvent): Promise<any> {
   const body = JSON.parse(event.body || '{}');
   const parsed = verifyEmailValidate.safeParse(body);
 

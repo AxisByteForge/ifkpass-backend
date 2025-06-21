@@ -1,7 +1,7 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 
+import { createProfile } from '../functions/create-profile';
 import { createUser } from '../functions/create-user';
-import { createProfile } from '../functions/profile';
 import { verifyEmail } from '../functions/verify-email';
 
 export const handler = async (

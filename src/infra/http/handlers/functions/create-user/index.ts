@@ -1,7 +1,9 @@
+import { APIGatewayProxyEvent } from 'aws-lambda';
+
 import { makeRegisterUseCase } from './factory';
 import { registerValidate } from './validate';
 
-async function createUser(event: any): Promise<any> {
+async function createUser(event: APIGatewayProxyEvent): Promise<any> {
   const body = JSON.parse(event.body || '{}');
   const parsed = registerValidate.safeParse(body);
 

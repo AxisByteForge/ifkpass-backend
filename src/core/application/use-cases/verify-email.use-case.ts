@@ -1,12 +1,12 @@
-import { IdentityProviderServiceAdapter } from '../../domain/adapters/aws/aws-cognito-adapter';
-import { EmailAlreadyVerifiedException } from '../../domain/errors/email-already-verified-exception';
-import { UserNotFoundException } from '../../domain/errors/user-not-found-exception';
-import { UserRepository } from '../../domain/repositories/UserRepository';
-import { left, right } from '../../either';
 import {
   VerifyEmailUseCaseRequest,
   VerifyEmailUseCaseResponse,
 } from './interfaces/verify-email.use-case.interface';
+import { IdentityProviderServiceAdapter } from '../../domain/adapters/aws/aws-cognito-adapter';
+import { left, right } from '../../domain/either';
+import { EmailAlreadyVerifiedException } from '../../domain/errors/email-already-verified-exception';
+import { UserNotFoundException } from '../../domain/errors/user-not-found-exception';
+import { UserRepository } from '../../domain/repositories/UserRepository';
 
 export class VerifyEmailUseCase {
   constructor(
