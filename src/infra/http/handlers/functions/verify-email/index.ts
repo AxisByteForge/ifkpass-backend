@@ -1,11 +1,11 @@
 import { factory } from './factory';
 import { verifyEmailValidate } from './validate';
-import { EmailAlreadyVerifiedException } from '../../../../core/user/domain/errors/email-already-verified-exception';
+import { EmailAlreadyVerifiedException } from '../../../../../core/domain/errors/email-already-verified-exception';
 import {
-  BadRequestException,
   ConflictException,
-} from '../../../../core/user/domain/errors/http-errors';
-import { UserAlreadyExistsException } from '../../../../core/user/domain/errors/user-already-exists-exception';
+  BadRequestException,
+} from '../../../../../core/domain/errors/http-errors';
+import { UserAlreadyExistsException } from '../../../../../core/domain/errors/user-already-exists-exception';
 
 async function verifyEmail(event: any): Promise<any> {
   const body = JSON.parse(event.body || '{}');

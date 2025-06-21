@@ -1,5 +1,5 @@
+import { UserAlreadyExistsException } from '../../../domain/errors/user-already-exists-exception';
 import { Either } from '../../../either';
-import { UserAlreadyExistsException } from '../../domain/errors/user-already-exists-exception';
 
 export interface CreateUserUseCaseRequest {
   props: {

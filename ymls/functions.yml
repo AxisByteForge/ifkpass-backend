@@ -1,4 +1,4 @@
 Proxy:
-  handler: dist/presentation/handlers/proxy/index.handler
+  handler: dist/infra/http/handlers/proxy/index.handler
   name: ${self:service}-${self:provider.stage}-createUser
   timeout: 900

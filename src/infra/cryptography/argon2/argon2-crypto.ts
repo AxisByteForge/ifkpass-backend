@@ -1,6 +1,8 @@
 import argon2 from 'argon2';
 
-export class Argon2Hasher {
+import { CryptographyAdapter } from '../../../core/domain/adapters/cryptography/cryptography-adapter';
+
+export class Argon2Hasher implements CryptographyAdapter {
   constructor() {}
 
   async hash(password: string): Promise<string> {

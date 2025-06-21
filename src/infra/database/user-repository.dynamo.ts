@@ -7,9 +7,9 @@ import {
 import { marshall, unmarshall } from '@aws-sdk/util-dynamodb';
 
 import { UserMapper } from './mappers/user.mapper';
-import { User } from '../../core/user/domain/entities/User.entity';
-import { UserRepository } from '../../core/user/domain/repositories/UserRepository';
-import { Config } from '../../infra/env/get-env';
+import { User } from '../../core/domain/entities/User.entity';
+import { UserRepository } from '../../core/domain/repositories/UserRepository';
+import { Config } from '../env/get-env';
 
 const config = new Config();
 class DynamoUserRepository implements UserRepository {

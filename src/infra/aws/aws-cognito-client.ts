@@ -7,7 +7,7 @@ import {
 } from '@aws-sdk/client-cognito-identity-provider';
 import crypto from 'node:crypto';
 
-import { IdentityProviderServiceAdapter } from '../../adapters/aws/aws-cognito-adapter';
+import { IdentityProviderServiceAdapter } from '../../core/domain/adapters/aws/aws-cognito-adapter';
 import { Config } from '../env/get-env';
 
 const config = new Config();
@@ -100,5 +100,16 @@ export class AwsCognitoService implements IdentityProviderServiceAdapter {
     )?.Value;
 
     return emailVerified === 'true';
+  }
+
+  async getUserId(email: string): Promise<string | null> {
+    const command = new AdminGetUserCommand({
+      Username: email,
+      UserPoolId: this.userPoolId,
+    });
+
+    const response = await this.cognitoClient.send(command);
+
+    return response.Username ?? '';
   }
 }

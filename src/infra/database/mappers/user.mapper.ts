@@ -1,8 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import {
-  User,
-  UserProps,
-} from '../../../core/user/domain/entities/User.entity';
+import { User, UserProps } from '../../../core/domain/entities/User.entity';
 
 export class UserMapper {
   static toDomain(raw: any): User {

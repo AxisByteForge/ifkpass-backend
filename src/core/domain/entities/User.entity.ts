@@ -24,11 +24,10 @@ export class User {
   }
 
   static create(
-    props: Omit<UserProps, 'userId' | 'createdAt' | 'emailVerificationExpires'>,
+    props: Omit<UserProps, 'createdAt' | 'emailVerificationExpires'>,
   ): User {
     return new User({
       ...props,
-      userId: randomUUID(),
       createdAt: new Date().toISOString(),
     });
   }

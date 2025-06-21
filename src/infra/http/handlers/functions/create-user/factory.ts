@@ -1,6 +1,6 @@
-import { CreateUserUseCase } from '../../../../core/user/application/use-cases/create-user.use-case';
-import { AwsCognitoService } from '../../../../infra/aws/aws-cognito-client';
-import { DynamoUserRepository } from '../../../../infra/persitence/user-repository.dynamo';
+import { CreateUserUseCase } from '../../../../../core/application/use-cases/create-user.use-case';
+import { AwsCognitoService } from '../../../../aws/aws-cognito-client';
+import { DynamoUserRepository } from '../../../../database/user-repository.dynamo';
 
 export function makeRegisterUseCase() {
   const usersRepository = new DynamoUserRepository();
