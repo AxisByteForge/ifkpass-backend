@@ -19,21 +19,19 @@ export class VerifyEmailUseCase {
     email,
     password,
   }: VerifyEmailUseCaseRequest): Promise<VerifyEmailUseCaseResponse> {
-    const user = await this.userRepository.findByEmail(email);
+    const userAlreadyExists = await this.userRepository.findByEmail(email);
 
-    if (!user) {
+    if (!userAlreadyExists) {
       throw new UserNotFoundException(email);
     }
 
-    const isEmailVerified = await this.identityProvider.isEmailVerified(
-      user.email,
-    );
+    const isEmailVerified = await this.identityProvider.isEmailVerified(email);
 
     if (isEmailVerified) {
       return left(new EmailAlreadyVerifiedException(email));
     }
 
-    await this.identityProvider.confirmEmail(user.email, code);
+    await this.identityProvider.confirmEmail(email, code);
 
     const token = await this.identityProvider.signIn(email, password);
 

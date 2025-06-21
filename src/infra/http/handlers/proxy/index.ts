@@ -1,6 +1,7 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 
 import { createUser } from '../functions/create-user';
+import { createProfile } from '../functions/profile';
 import { verifyEmail } from '../functions/verify-email';
 
 export const handler = async (
@@ -18,8 +19,9 @@ export const handler = async (
       >
     > = {
       POST: {
-        '/create-user': createUser,
+        '/user': createUser,
         '/verify-email': verifyEmail,
+        '/profile': createProfile,
       },
     };
 
