@@ -1,6 +1,6 @@
 import { APIGatewayProxyEvent } from 'aws-lambda';
 
-import { makeProfileUseCase } from './factory';
+import { makeCreateProfileUseCase } from './factory';
 import { profileValidate } from './validate';
 
 async function createProfile(event: APIGatewayProxyEvent): Promise<any> {
@@ -19,7 +19,7 @@ async function createProfile(event: APIGatewayProxyEvent): Promise<any> {
     };
   }
 
-  const useCase = makeProfileUseCase();
+  const useCase = makeCreateProfileUseCase();
 
   const result = await useCase.execute({
     body: parsed.data,
