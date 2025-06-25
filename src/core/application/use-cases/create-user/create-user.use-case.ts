@@ -1,12 +1,12 @@
 import {
   CreateUserUseCaseRequest,
   CreateUserUseCaseResponse,
-} from './interfaces/create-user.use-case.interface';
-import { IdentityProviderServiceAdapter } from '../../domain/adapters/aws/aws-cognito-adapter';
-import { left, right } from '../../domain/either';
-import { User } from '../../domain/entities/User.entity';
-import { UserAlreadyExistsException } from '../../domain/errors/user-already-exists-exception';
-import { UserRepository } from '../../domain/repositories/UserRepository';
+} from './create-user.use-case.interface';
+import { IdentityProviderServiceAdapter } from '../../../domain/adapters/aws/aws-cognito-adapter';
+import { left, right } from '../../../domain/either';
+import { User } from '../../../domain/entities/User.entity';
+import { UserAlreadyExistsException } from '../../../domain/errors/user-already-exists-exception';
+import { UserRepository } from '../../../domain/repositories/UserRepository';
 
 export class CreateUserUseCase {
   constructor(
@@ -38,6 +38,8 @@ export class CreateUserUseCase {
 
     await this.userRepository.create(user);
 
-    return right({});
+    return right({
+      message: 'Created',
+    });
   }
 }

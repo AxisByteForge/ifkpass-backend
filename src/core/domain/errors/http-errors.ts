@@ -62,3 +62,9 @@ export class InternalServerErrorException extends AppException {
     super(message, 500, 'Internal Server Error');
   }
 }
+
+export class UnauthorizedError extends AppException {
+  constructor(message = 'Unauthorized') {
+    super(message, 401, 'Unauthorized Error');
+  }
+}

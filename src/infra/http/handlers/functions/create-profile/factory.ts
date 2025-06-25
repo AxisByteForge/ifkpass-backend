@@ -1,4 +1,4 @@
-import { CreateProfileUseCase } from '../../../../../core/application/use-cases/create-profile.use-case';
+import { CreateProfileUseCase } from '../../../../../core/application/use-cases/create-profile/create-profile.use-case';
 import { AwsCognitoService } from '../../../../aws/aws-cognito-client';
 import { DynamoUserRepository } from '../../../../database/user-repository.dynamo';
 

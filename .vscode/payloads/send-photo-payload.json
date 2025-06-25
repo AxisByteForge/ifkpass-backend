@@ -1,0 +1,10 @@
+{
+  "body": "{\"cpf\":\"123.456.789-00\",\"birthDate\":\"1990-01-01\",\"city\":\"São Paulo\",\"dojo\":\"Dojo Central\",\"rank\":\"Faixa Preta\",\"sensei\":\"Tanaka\",\"photoUrl\":\"https://example.com/foto.jpg\",\"registrationNumber\":\"123456\"}",
+  "path": "/profile/photo",
+  "httpMethod": "POST",
+  "headers": {
+    "Content-Type": "application/json",
+    "Authorization": "Bearer eyJraWQiOiJVSVNNcWFkVStGKzFYQWV4UmlHOFwvY0dWTU0wZWY0SWphOHdBblJiSDIxST0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiI5NDg4ZTQzOC0zMDcxLTcwOGUtMzI1MS01ZmZjZDUxNjgwYjIiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiaXNzIjoiaHR0cHM6XC9cL2NvZ25pdG8taWRwLnVzLWVhc3QtMS5hbWF6b25hd3MuY29tXC91cy1lYXN0LTFfSGdQRUNVd1FSIiwiY29nbml0bzp1c2VybmFtZSI6Ijk0ODhlNDM4LTMwNzEtNzA4ZS0zMjUxLTVmZmNkNTE2ODBiMiIsIm9yaWdpbl9qdGkiOiI0NDE0ZmY2OS02NjMzLTQ2NDgtYWVjZC0yODNmNzU1Y2Q1YzMiLCJhdWQiOiI1dDJldjdqam5jZzVjZ243dmFxNnZwbTZkZyIsImV2ZW50X2lkIjoiZjEyODVjMmQtN2QxMC00M2I3LTlkMWMtZWYxOGMzMzZiZGQ2IiwidG9rZW5fdXNlIjoiaWQiLCJhdXRoX3RpbWUiOjE3NTA4MTM0MzksImV4cCI6MTc1MDgxNzAzOSwiaWF0IjoxNzUwODEzNDM5LCJqdGkiOiJlNTE3NGMwZS05YjJkLTRjZWYtOTcxYS1iMTg2MDVkNjNlZWMiLCJlbWFpbCI6ImJhcnJldG9ydWFuNzdAZ21haWwuY29tIn0.ti4r8At9PNMlSuNoP8SL4_rvG-Blf_GDPQ_ekd97eF5OJUq410OiECzkOHBx8DeprzN00km766H1rRKR1rnPMd1HPL6Sf8D7iPQXAqCeeC8W4lFexhhD2VTi4n6VEn-W5Zdm0eOg2smvohHeW3KNgVVtUCxVoC_JFZykYwfkxO_A_BD22HEmxHmUVMNz-958sTqXsuA-LMVzzSsWe-nrQfilQujTwJWLC7gzsv0q95KPX_QSWLsSY5Ougrd9sU_Z7CWPjiNkyftR2695PjN7mUEDTed65xo8uDNReN8HVUlGr__vn-tgg5me5oGQeSql5kypIbvk-xeIkUKR3Bm6Lw"
+  },
+  "isBase64Encoded": false
+}

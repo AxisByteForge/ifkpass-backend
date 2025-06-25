@@ -1,5 +1,6 @@
 import { jwtVerify, createRemoteJWKSet } from 'jose';
 
+import { UnauthorizedError } from '../../../core/domain/errors/http-errors';
 import { Config } from '../../env/get-env';
 
 const config = new Config();
@@ -27,9 +28,8 @@ export async function verifyToken(authHeader?: string): Promise<string> {
 
     return payload.sub ?? '';
   } catch (err) {
-    if (err instanceof Error) {
-      throw new Error(err.message);
-    }
-    throw new Error(String(err));
+    throw new UnauthorizedError(
+      err instanceof Error ? err.message : 'Token inválido ou expirado',
+    );
   }
 }

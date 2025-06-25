@@ -1,11 +1,11 @@
 import {
   CreateProfileUseCaseRequest,
   CreateProfileUseCaseResponse,
-} from './interfaces/create-profile.use-case.interface';
-import { IdentityProviderServiceAdapter } from '../../domain/adapters/aws/aws-cognito-adapter';
-import { right } from '../../domain/either';
-import { Profile } from '../../domain/entities/Profile.entity';
-import { UserRepository } from '../../domain/repositories/UserRepository';
+} from './create-profile.use-case.interface';
+import { IdentityProviderServiceAdapter } from '../../../domain/adapters/aws/aws-cognito-adapter';
+import { right } from '../../../domain/either';
+import { Profile } from '../../../domain/entities/Profile.entity';
+import { UserRepository } from '../../../domain/repositories/UserRepository';
 
 export class CreateProfileUseCase {
   constructor(

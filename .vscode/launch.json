@@ -69,6 +69,29 @@
       "skipFiles": [
         "<node_internals>/**"
       ]
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug Lambda: SendPhoto",
+      "program": "${workspaceFolder}/node_modules/.bin/sls",
+      "args": [
+        "invoke",
+        "local",
+        "-f",
+        "Proxy",
+        "-p",
+        "${workspaceFolder}/.vscode/payloads/send-photo-payload.json"
+      ],
+      "console": "integratedTerminal",
+      "preLaunchTask": "build:dev",
+      "outFiles": [
+        "${workspaceFolder}/dist/**/*.js"
+      ],
+      "sourceMaps": true,
+      "skipFiles": [
+        "<node_internals>/**"
+      ]
     }
   ]
 }

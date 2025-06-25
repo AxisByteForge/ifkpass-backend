@@ -12,5 +12,5 @@ export interface CreateUserUseCaseRequest {
 
 export type CreateUserUseCaseResponse = Either<
   UserAlreadyExistsException,
-  object
+  { message: string }
 >;
