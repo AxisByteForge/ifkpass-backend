@@ -3,9 +3,8 @@ import {
   CreateProfileUseCaseResponse,
 } from './interfaces/create-profile.use-case.interface';
 import { IdentityProviderServiceAdapter } from '../../domain/adapters/aws/aws-cognito-adapter';
-import { left, right } from '../../domain/either';
-import { User } from '../../domain/entities/User.entity';
-import { UserAlreadyExistsException } from '../../domain/errors/user-already-exists-exception';
+import { right } from '../../domain/either';
+import { Profile } from '../../domain/entities/Profile.entity';
 import { UserRepository } from '../../domain/repositories/UserRepository';
 
 export class CreateProfileUseCase {
@@ -18,26 +17,14 @@ export class CreateProfileUseCase {
     userId,
     body,
   }: CreateProfileUseCaseRequest): Promise<CreateProfileUseCaseResponse> {
-    const userAlreadyExists = await this.userRepository.findByEmail(
-      props.email,
-    );
-
-    if (userAlreadyExists) {
-      return left(new UserAlreadyExistsException(props.email));
-    }
-
-    await this.identityProvider.signUp(props.email, props.password);
-
-    const userId = await this.identityProvider.getUserId(props.email);
-
-    const user = User.create({
-      userId: userId ?? '',
-      name: props.name,
-      lastName: props.lastName,
-      email: props.email,
+    const profile = Profile.create({
+      userId,
+      ...body,
     });
 
-    await this.userRepository.create(user);
+    // TODO: ATUALIZAR NO DYNAMO INSERINDO OS CAMPOS DO PROFILE
+
+    console.log(profile);
 
     return right({});
   }
