@@ -8,7 +8,7 @@ import {
 } from '../../../../../core/domain/errors/http-errors';
 import { UserAlreadyExistsException } from '../../../../../core/domain/errors/user-already-exists-exception';
 
-async function createUser(event: APIGatewayProxyEvent): Promise<any> {
+async function createUser(event: APIGatewayProxyEvent) {
   const body = JSON.parse(event.body || '{}');
   const parsed = registerValidate.safeParse(body);
 
