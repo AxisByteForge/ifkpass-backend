@@ -1,11 +1,9 @@
 import { Either } from '../../../domain/either';
 
 export interface CreateProfileUseCaseRequest {
-  headers: {
-    Authorization?: string;
-  };
+  userId: string;
   body: {
-    birthDate: Date;
+    birthDate: string;
     city: string;
     cpf: string;
     dojo: string;

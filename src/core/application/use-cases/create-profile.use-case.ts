@@ -15,8 +15,8 @@ export class CreateProfileUseCase {
   ) {}
 
   async execute({
+    userId,
     body,
-    headers,
   }: CreateProfileUseCaseRequest): Promise<CreateProfileUseCaseResponse> {
     const userAlreadyExists = await this.userRepository.findByEmail(
       props.email,
