@@ -1,5 +1,5 @@
 {
-  "body": "{\"cpf\":\"123.456.789-00\",\"birthDate\":\"1990-01-01\",\"city\":\"São Paulo\",\"dojo\":\"Dojo Central\",\"rank\":\"Faixa Preta\",\"sensei\":\"Tanaka\",\"photoUrl\":\"https://example.com/foto.jpg\"}",
+  "body": "{\"cpf\":\"123.456.789-00\",\"birthDate\":\"1990-01-01\",\"city\":\"São Paulo\",\"dojo\":\"Dojo Central\",\"rank\":\"Faixa Preta\",\"sensei\":\"Tanaka\",\"photoUrl\":\"https://example.com/foto.jpg\",\"registrationNumber\":\"123456\"}",
   "path": "/profile",
   "httpMethod": "POST",
   "headers": {

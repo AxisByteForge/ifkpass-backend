@@ -7,7 +7,8 @@ export interface ProfileProps {
   rank: string;
   sensei: string;
   photoUrl: string;
-  createdAt: string;
+  registrationNumber: string;
+  updatedAt: string;
 }
 
 export class Profile {
@@ -19,7 +20,8 @@ export class Profile {
   readonly rank: string;
   readonly sensei: string;
   readonly photoUrl: string;
-  readonly createdAt: string;
+  readonly registrationNumber: string;
+  readonly updatedAt: string;
 
   private constructor(props: ProfileProps) {
     this.userId = props.userId;
@@ -30,24 +32,19 @@ export class Profile {
     this.rank = props.rank;
     this.sensei = props.sensei;
     this.photoUrl = props.photoUrl;
-    this.createdAt = props.createdAt;
+    this.registrationNumber = props.registrationNumber;
+    this.updatedAt = props.updatedAt;
   }
 
-  static create(props: Omit<ProfileProps, 'createdAt'>): Profile {
+  static create(props: Omit<ProfileProps, 'updatedAt'>): Profile {
     return new Profile({
       ...props,
-      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     });
   }
 
   static fromPersistence(props: ProfileProps): Profile {
     return new Profile(props);
-  }
-
-  static generateVerificationCode(length = 6): string {
-    const min = Math.pow(10, length - 1);
-    const max = Math.pow(10, length) - 1;
-    return Math.floor(Math.random() * (max - min + 1) + min).toString();
   }
 
   getProps(): ProfileProps {
@@ -60,7 +57,8 @@ export class Profile {
       rank: this.rank,
       sensei: this.sensei,
       photoUrl: this.photoUrl,
-      createdAt: this.createdAt,
+      registrationNumber: this.registrationNumber,
+      updatedAt: this.updatedAt,
     };
   }
 }

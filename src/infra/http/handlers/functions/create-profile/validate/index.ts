@@ -7,5 +7,6 @@ export const profileValidate = z.object({
   dojo: z.string().min(1),
   rank: z.string().min(1),
   sensei: z.string().min(1),
+  registrationNumber: z.string().min(1),
   photoUrl: z.string().url(),
 });

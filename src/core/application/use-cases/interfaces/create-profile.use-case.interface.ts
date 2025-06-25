@@ -10,6 +10,7 @@ export interface CreateProfileUseCaseRequest {
     rank: string;
     sensei: string;
     photoUrl: string;
+    registrationNumber: string;
   };
 }
 

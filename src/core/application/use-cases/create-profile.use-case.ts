@@ -19,7 +19,14 @@ export class CreateProfileUseCase {
   }: CreateProfileUseCaseRequest): Promise<CreateProfileUseCaseResponse> {
     const profile = Profile.create({
       userId,
-      ...body,
+      birthDate: body.birthDate,
+      city: body.city,
+      cpf: body.cpf,
+      dojo: body.dojo,
+      rank: body.rank,
+      sensei: body.sensei,
+      registrationNumber: body.registrationNumber,
+      photoUrl: body.photoUrl,
     });
 
     // TODO: ATUALIZAR NO DYNAMO INSERINDO OS CAMPOS DO PROFILE
