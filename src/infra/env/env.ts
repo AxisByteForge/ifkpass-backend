@@ -11,4 +11,5 @@ export const envs = {
   COGNITO_CLIENT_SECRET: z.string(),
   COGNITO_USER_POOL_ID: z.string(),
   COGNITO_URL: z.string(),
+  PROFILE_BUCKET_NAME: z.string(),
 };
