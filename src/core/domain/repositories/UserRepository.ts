@@ -1,3 +1,4 @@
+import { Profile } from '../entities/Profile.entity';
 import { User } from '../entities/User.entity';
 
 export interface UserRepository {
@@ -7,4 +8,5 @@ export interface UserRepository {
     userId: string,
     isVerified: boolean,
   ): Promise<void>;
+  createProfile(userId: string, profileData: Profile): Promise<void>;
 }

@@ -1,0 +1,9 @@
+{
+  "statusCode": 201,
+  "body": {
+    "value": {
+      "photoUrl": "https://ifkpass-profile-photos.s3.us-east-1.amazonaws.com/users/14c88408-6081-70b5-46cf-7674cfb76822/profile-photo.jpg",
+      "uploadUrl": "https://ifkpass-profile-photos.s3.us-east-1.amazonaws.com/users/14c88408-6081-70b5-46cf-7674cfb76822/profile-photo.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIA6EXB6BTSSNU7E5ZA/20250627/us-east-1/s3/aws4_request&X-Amz-Date=20250627T011259Z&X-Amz-Expires=604800&X-Amz-Signature=b1c3fab6a51495cdfaaf88f081d0c8a5208b43dd4dc7c3ed7c8a245dfea74ac3&X-Amz-SignedHeaders=host&x-amz-checksum-crc32=AAAAAA==&x-amz-sdk-checksum-algorithm=CRC32&x-id=PutObject"
+    }
+  }
+}

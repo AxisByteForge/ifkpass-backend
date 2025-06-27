@@ -7,6 +7,7 @@ import {
 import { marshall, unmarshall } from '@aws-sdk/util-dynamodb';
 
 import { UserMapper } from './mappers/user.mapper';
+import { Profile } from '../../core/domain/entities/Profile.entity';
 import { User } from '../../core/domain/entities/User.entity';
 import { UserRepository } from '../../core/domain/repositories/UserRepository';
 import { Config } from '../env/get-env';
@@ -69,6 +70,47 @@ class DynamoUserRepository implements UserRepository {
       ExpressionAttributeValues: marshall({
         ':isVerified': isVerified,
       }),
+      ConditionExpression: 'attribute_exists(userId)',
+    });
+
+    await this.dynamoClient.send(command);
+  }
+
+  async createProfile(userId: string, profileData: Profile): Promise<void> {
+    const command = new UpdateItemCommand({
+      TableName: this.tableName,
+      Key: {
+        userId: { S: userId },
+      },
+      UpdateExpression: `
+      SET 
+        birthDate = :birthDate,
+        city = :city,
+        cpf = :cpf,
+        dojo = :dojo,
+        #rank = :rank,
+        sensei = :sensei,
+        photoUrl = :photoUrl,
+        registrationNumber = :registrationNumber,
+        updatedAt = :updatedAt
+    `,
+      ExpressionAttributeNames: {
+        '#rank': 'rank',
+      },
+      ExpressionAttributeValues: marshall(
+        {
+          ':birthDate': profileData.birthDate,
+          ':city': profileData.city,
+          ':cpf': profileData.cpf,
+          ':dojo': profileData.dojo,
+          ':rank': profileData.rank,
+          ':sensei': profileData.sensei,
+          ':photoUrl': profileData.photoUrl,
+          ':registrationNumber': profileData.registrationNumber,
+          ':updatedAt': profileData.updatedAt,
+        },
+        { removeUndefinedValues: true },
+      ),
       ConditionExpression: 'attribute_exists(userId)',
     });
 

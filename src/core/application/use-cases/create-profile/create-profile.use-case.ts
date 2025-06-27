@@ -29,7 +29,7 @@ export class CreateProfileUseCase {
       photoUrl: body.photoUrl,
     });
 
-    // TODO: ATUALIZAR NO DYNAMO INSERINDO OS CAMPOS DO PROFILE
+    await this.userRepository.createProfile(userId, profile);
 
     console.log(profile);
 
