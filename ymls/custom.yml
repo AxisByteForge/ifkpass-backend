@@ -2,12 +2,19 @@ environment: ${file(./ymls/environment.yml)}
 functions:   ${file(./ymls/functions.yml)}
 resources:   ${file(./ymls/resources.yml)}
 
-REGION:
-  dev: us-east-1
-  hml: us-east-1
-  prd: us-east-1
+NODE_ENV:
+  dev: dev
+  hml: hml
+  prd: prd
 
-ACCOUNT_ID:
-  dev: 999999999999
-  hml: 999999999999
-  prd: 999999999999
+USERS_TABLE_NAME:
+  dev: users-dev
+  prd: users-prd
+
+PROFILES_TABLE_NAME:
+  dev: profiles-dev
+  prd: profiles-prd
+
+PROFILE_BUCKET_NAME:
+  dev: ifkpass-profile-photos-dev
+  prd: ifkpass-profile-photos-prd

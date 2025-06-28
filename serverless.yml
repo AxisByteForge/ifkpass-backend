@@ -10,12 +10,11 @@ package:
 
 provider:
   name: aws
-  runtime: nodejs20.x
+  runtime: nodejs22.x
   region: us-east-1
   timeout: 30
   versionFunctions: false
   stage: ${opt:stage, 'dev'}
-  
 
   iam:
     role:
@@ -38,14 +37,12 @@ provider:
     department: x.xxxxxxxx
     squad: x.xxxxxxxx
     projectName: x.xxxxxxxx
-    project: hello lambda
+    project: IFKPass backend
     stage: ${sls:stage}
     env: ${opt:stage, 'dev'}
     version: ${file(./package.json):version}
     
 
 custom: ${file(ymls/custom.yml)}
-
-
 functions: ${self:custom.functions}
 resources: ${self:custom.resources}
