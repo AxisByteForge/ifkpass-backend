@@ -1,3 +1,5 @@
+import { randomUUID } from 'node:crypto';
+
 export interface ProfileProps {
   userId: string;
   birthDate: string;
@@ -7,7 +9,7 @@ export interface ProfileProps {
   rank: string;
   sensei: string;
   photoUrl: string;
-  registrationNumber: string;
+  cardId: string;
   updatedAt: string;
 }
 
@@ -20,7 +22,7 @@ export class Profile {
   readonly rank: string;
   readonly sensei: string;
   readonly photoUrl: string;
-  readonly registrationNumber: string;
+  readonly cardId?: string;
   readonly updatedAt: string;
 
   private constructor(props: ProfileProps) {
@@ -32,14 +34,19 @@ export class Profile {
     this.rank = props.rank;
     this.sensei = props.sensei;
     this.photoUrl = props.photoUrl;
-    this.registrationNumber = props.registrationNumber;
+    this.cardId = props.cardId;
     this.updatedAt = props.updatedAt;
   }
 
-  static create(props: Omit<ProfileProps, 'updatedAt'>): Profile {
+  static create(props: Omit<ProfileProps, 'cardId' | 'updatedAt'>): Profile {
+    const year = new Date().getFullYear();
+    const uuid = randomUUID();
+    const cardId = `KTY-${year}-${uuid}`;
+
     return new Profile({
       ...props,
       updatedAt: new Date().toISOString(),
+      cardId,
     });
   }
 
@@ -57,7 +64,7 @@ export class Profile {
       rank: this.rank,
       sensei: this.sensei,
       photoUrl: this.photoUrl,
-      registrationNumber: this.registrationNumber,
+      cardId: this.cardId ?? '',
       updatedAt: this.updatedAt,
     };
   }

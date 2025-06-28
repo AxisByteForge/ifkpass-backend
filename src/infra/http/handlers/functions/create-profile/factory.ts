@@ -1,13 +1,8 @@
 import { CreateProfileUseCase } from '../../../../../core/application/use-cases/create-profile/create-profile.use-case';
-import { AwsCognitoService } from '../../../../aws/aws-cognito-client';
 import { DynamoUserRepository } from '../../../../database/user-repository.dynamo';
 
 export function makeCreateProfileUseCase() {
   const usersRepository = new DynamoUserRepository();
-  const cognitoService = new AwsCognitoService();
-  const createProfileUseCase = new CreateProfileUseCase(
-    usersRepository,
-    cognitoService,
-  );
+  const createProfileUseCase = new CreateProfileUseCase(usersRepository);
   return createProfileUseCase;
 }

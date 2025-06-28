@@ -10,8 +10,7 @@ export interface CreateProfileUseCaseRequest {
     rank: string;
     sensei: string;
     photoUrl: string;
-    registrationNumber: string;
   };
 }
 
-export type CreateProfileUseCaseResponse = Either<null, object>;
+export type CreateProfileUseCaseResponse = Either<null, { message: string }>;

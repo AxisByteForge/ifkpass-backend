@@ -2,16 +2,12 @@ import {
   CreateProfileUseCaseRequest,
   CreateProfileUseCaseResponse,
 } from './create-profile.use-case.interface';
-import { IdentityProviderServiceAdapter } from '../../../domain/adapters/aws/aws-cognito-adapter';
 import { right } from '../../../domain/either';
 import { Profile } from '../../../domain/entities/Profile.entity';
 import { UserRepository } from '../../../domain/repositories/UserRepository';
 
 export class CreateProfileUseCase {
-  constructor(
-    private userRepository: UserRepository,
-    private identityProvider: IdentityProviderServiceAdapter,
-  ) {}
+  constructor(private userRepository: UserRepository) {}
 
   async execute({
     userId,
@@ -25,14 +21,13 @@ export class CreateProfileUseCase {
       dojo: body.dojo,
       rank: body.rank,
       sensei: body.sensei,
-      registrationNumber: body.registrationNumber,
       photoUrl: body.photoUrl,
     });
 
     await this.userRepository.createProfile(userId, profile);
 
-    console.log(profile);
-
-    return right({});
+    return right({
+      message: 'Created',
+    });
   }
 }

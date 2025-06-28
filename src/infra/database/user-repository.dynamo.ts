@@ -91,7 +91,7 @@ class DynamoUserRepository implements UserRepository {
         #rank = :rank,
         sensei = :sensei,
         photoUrl = :photoUrl,
-        registrationNumber = :registrationNumber,
+        cardId = :cardId,
         updatedAt = :updatedAt
     `,
       ExpressionAttributeNames: {
@@ -106,7 +106,7 @@ class DynamoUserRepository implements UserRepository {
           ':rank': profileData.rank,
           ':sensei': profileData.sensei,
           ':photoUrl': profileData.photoUrl,
-          ':registrationNumber': profileData.registrationNumber,
+          ':cardId': profileData.cardId,
           ':updatedAt': profileData.updatedAt,
         },
         { removeUndefinedValues: true },

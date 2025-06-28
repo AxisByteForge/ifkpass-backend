@@ -21,9 +21,7 @@ export class User {
     this.email = props.email;
   }
 
-  static create(
-    props: Omit<UserProps, 'createdAt' | 'emailVerificationExpires'>,
-  ): User {
+  static create(props: Omit<UserProps, 'createdAt'>): User {
     return new User({
       ...props,
       createdAt: new Date().toISOString(),
