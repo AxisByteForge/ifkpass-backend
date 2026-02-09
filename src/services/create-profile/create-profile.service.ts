@@ -7,6 +7,9 @@ import {
   beltCategoryFromRank,
   generateCardId
 } from '@/shared/utils/karate-utils';
+import { normalizePhone } from '@/shared/utils/normalizePhone';
+import { normalizeCpf } from '@/shared/utils/normalizeCpf';
+import { normalizeBirthDate } from '@/shared/utils/normalizeBirthDate';
 import {
   CreateProfileServiceRequest,
   CreateProfileUseCaseResponse
@@ -44,12 +47,14 @@ export const createProfile = async (
   };
 
   await updateUser(input.id, {
-    birthDate: input.body.birthDate,
+    birthDate: normalizeBirthDate(input.body.birthDate),
     city: input.body.city,
-    cpf: input.body.cpf,
+    cpf: normalizeCpf(input.body.cpf),
     dojo: input.body.dojo,
     rank: normalizedRank,
     sensei: input.body.sensei,
+    photoUrl: input.body.photoUrl,
+    phone: normalizePhone(input.body.phone),
     cardId,
     paymentDetails: updatedPaymentDetails
   });

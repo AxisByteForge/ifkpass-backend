@@ -11,7 +11,9 @@ const schema = z.object({
   cpf: z.string(),
   dojo: z.string(),
   rank: z.string(),
-  sensei: z.string()
+  sensei: z.string(),
+  phone: z.string(),
+  photoUrl: z.string().optional()
 });
 
 export const createProfile = async (

@@ -10,6 +10,8 @@ export interface CreateProfileServiceRequest {
     dojo: string;
     rank: string;
     sensei: string;
+    phone: string;
+    photoUrl?: string;
   };
 }
 
