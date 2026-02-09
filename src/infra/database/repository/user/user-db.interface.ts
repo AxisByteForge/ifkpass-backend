@@ -25,6 +25,7 @@ export interface UserDbData {
     discountApplied?: boolean;
     beltCategory?: string;
     rank?: string;
+    cardId?: string;
     updatedAt: string;
   };
 }

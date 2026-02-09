@@ -73,6 +73,11 @@ export const payCard = async (
         paymentId: input.paymentId,
         rank: user.rank,
         beltCategory,
+        cardId: currentPaymentDetails?.cardId ?? user.cardId ?? '',
+        amount: currentPaymentDetails?.amount ?? 0,
+        currency: currentPaymentDetails?.currency ?? '',
+        preferenceId: currentPaymentDetails?.preferenceId ?? '',
+        discountApplied: currentPaymentDetails?.discountApplied ?? false,
         updatedAt: new Date().toISOString()
       }
     });
@@ -102,7 +107,8 @@ export const payCard = async (
     metadata: {
       userId: input.userId,
       rank: user.rank ?? 'Não informado',
-      beltCategory
+      beltCategory,
+      cardId: user.cardId ?? 'Não informado'
     },
     idempotencyKey: user.cardId || undefined
   });
@@ -117,6 +123,7 @@ export const payCard = async (
       discountApplied,
       rank: user.rank,
       beltCategory,
+      cardId: user.cardId ?? '',
       updatedAt: new Date().toISOString()
     }
   });
