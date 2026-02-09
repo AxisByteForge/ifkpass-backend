@@ -17,10 +17,10 @@ export const signinUser = async (
     });
 
     if (result.isLeft()) {
-      const { reason, statusCode } = result.value;
+      const err = result.value;
       return {
-        statusCode,
-        body: JSON.stringify({ message: reason })
+        statusCode: err.statusCode,
+        body: JSON.stringify({ ...err })
       };
     }
 
