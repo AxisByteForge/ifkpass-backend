@@ -104,7 +104,7 @@ describe('PayCard Service', () => {
 
       expect(createCheckoutPreference).toHaveBeenCalledWith(
         expect.objectContaining({
-          unitPrice: 80
+          unitPrice: 85
         })
       );
     });
@@ -142,7 +142,7 @@ describe('PayCard Service', () => {
 
       expect(createCheckoutPreference).toHaveBeenCalledWith(
         expect.objectContaining({
-          unitPrice: 50
+          unitPrice: 55
         })
       );
     });
@@ -180,7 +180,7 @@ describe('PayCard Service', () => {
 
       expect(createCheckoutPreference).toHaveBeenCalledWith(
         expect.objectContaining({
-          unitPrice: 100
+          unitPrice: 105
         })
       );
     });
@@ -218,7 +218,7 @@ describe('PayCard Service', () => {
 
       expect(createCheckoutPreference).toHaveBeenCalledWith(
         expect.objectContaining({
-          unitPrice: 80
+          unitPrice: 85
         })
       );
     });
@@ -257,7 +257,7 @@ describe('PayCard Service', () => {
       expect(result.isRight()).toBe(true);
       expect(createCheckoutPreference).toHaveBeenCalledWith(
         expect.objectContaining({
-          unitPrice: 80,
+          unitPrice: 85,
           metadata: expect.objectContaining({
             userId: 'user-123',
             rank: 'Não informado',
@@ -307,7 +307,7 @@ describe('PayCard Service', () => {
             alreadyPaid: false,
             status: 'pending',
             preferenceId: 'pref-456',
-            amount: 50,
+            amount: 55,
             currency: 'BRL',
             discountApplied: true,
             rank: 'Verde',
@@ -462,7 +462,7 @@ describe('PayCard Service', () => {
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
         paymentDetails: {
-          amount: 80,
+          amount: 85,
           currency: 'BRL',
           preferenceId: 'pref-123',
           discountApplied: false,
@@ -496,7 +496,7 @@ describe('PayCard Service', () => {
             status: 'approved',
             paymentId: 'payment-123',
             cardId: 'CARD-123',
-            amount: 80,
+            amount: 85,
             currency: 'BRL',
             preferenceId: 'pref-123',
             discountApplied: false
@@ -518,7 +518,7 @@ describe('PayCard Service', () => {
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
         paymentDetails: {
-          amount: 50,
+          amount: 55,
           currency: 'BRL',
           preferenceId: 'pref-456',
           discountApplied: true,
@@ -551,7 +551,7 @@ describe('PayCard Service', () => {
             alreadyPaid: false,
             status: 'rejected',
             cardId: 'CARD-456',
-            amount: 50,
+            amount: 55,
             currency: 'BRL',
             preferenceId: 'pref-456',
             discountApplied: true
@@ -573,7 +573,7 @@ describe('PayCard Service', () => {
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
         paymentDetails: {
-          amount: 80,
+          amount: 85,
           currency: 'BRL',
           preferenceId: 'pref-789',
           discountApplied: false,
@@ -608,7 +608,7 @@ describe('PayCard Service', () => {
             alreadyPaid: false,
             status: 'pending',
             cardId: 'CARD-789',
-            amount: 80,
+            amount: 85,
             currency: 'BRL',
             preferenceId: 'pref-789',
             discountApplied: false

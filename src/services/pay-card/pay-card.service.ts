@@ -16,10 +16,10 @@ const computeAmount = (rank: string | undefined, now: Date): number => {
   const blackBelt = rank === 'Preta';
 
   if (blackBelt) {
-    return discount ? 80 : 100;
+    return discount ? 85 : 105;
   }
 
-  return discount ? 50 : 80;
+  return discount ? 55 : 85;
 };
 
 const getBeltCategory = (rank?: string): string => {
