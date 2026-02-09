@@ -1,91 +1,96 @@
 import { findUserByEmail } from '@/infra/database/repository/user/user-db.service';
 import {
-  AuthenticateInput,
-  AuthenticateOutput
+  AuthenticateServiceRequest,
+  AuthenticateUseCaseResponse
 } from './authenticate.service.interface';
-import { UserNotFoundError } from '@/shared/errors/user-not-found-exception';
 import {
   findValidToken,
   markTokenAsUsed
 } from '@/infra/database/repository/authTokens/auth-tokens-db.service';
 import { generateAccessToken } from '@/infra/jwt/jwt.service';
 import { findAdminByEmail } from '@/infra/database/repository/admins/admins-db.service';
+import { left, right } from '@/shared/types/either';
+import type { Either } from '@/shared/types/either';
+import type { Failure } from '@/shared/types/failure.type';
 
-const isAdmin = async (email: string): Promise<any> => {
+const isAdmin = async (email: string): Promise<Either<Failure, any>> => {
   const admin = await findAdminByEmail(email);
 
   if (!admin) {
     const user = await findUserByEmail(email);
 
     if (!user) {
-      throw new UserNotFoundError(email);
+      return left({
+        reason: 'User not found',
+        statusCode: 404
+      });
     }
 
-    return {
+    return right({
       id: user.id,
       email: user.email,
-      isAdmin: false
-    };
+      isAdmin: false,
+      status: user.status
+    });
   }
 
-  return {
+  return right({
     id: admin.id,
     email: admin.email,
     isAdmin: true
-  };
+  });
 };
 
 export const authenticate = async (
-  input: AuthenticateInput
-): Promise<AuthenticateOutput | any> => {
-  const user = await isAdmin(input.email);
+  input: AuthenticateServiceRequest
+): Promise<AuthenticateUseCaseResponse> => {
+  const userResult = await isAdmin(input.email);
 
+  if (userResult.isLeft()) {
+    return left(userResult.value);
+  }
+
+  const user = userResult.value;
   const code = input.code;
 
   const authToken = await findValidToken(code);
 
   if (!authToken) {
-    return {
-      statusCode: 401,
-      message: 'Token was not valid'
-    };
+    return left({
+      reason: 'Token was not valid',
+      statusCode: 401
+    });
   }
 
   if (user.isAdmin) {
     await markTokenAsUsed(code);
 
     const token = generateAccessToken({
-      id: user.Id,
+      id: user.id,
       email: user.email,
       isAdmin: true
     });
 
-    return {
-      statusCode: 200,
-      token
-    };
+    return right({ token });
   }
 
   if (user.status === 'pending') {
-    return {
-      statusCode: 403,
-      message: 'User not approved yet'
-    };
+    return left({
+      reason: 'User not approved yet',
+      statusCode: 403
+    });
   }
 
   if (user.status === 'rejected') {
-    return {
-      statusCode: 403,
-      message: 'User application was rejected'
-    };
+    return left({
+      reason: 'User application was rejected',
+      statusCode: 403
+    });
   }
 
   await markTokenAsUsed(code);
 
   const token = generateAccessToken({ id: user.id, email: user.email });
 
-  return {
-    statusCode: 200,
-    token
-  };
+  return right({ token });
 };

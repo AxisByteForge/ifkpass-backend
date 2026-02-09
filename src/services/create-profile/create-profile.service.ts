@@ -2,24 +2,27 @@ import {
   findUserById,
   updateUser
 } from '@/infra/database/repository/user/user-db.service';
-import { UserNotFoundError } from '@/shared/errors/user-not-found-exception';
 import {
   normalizeRank,
   beltCategoryFromRank,
   generateCardId
 } from '@/shared/utils/karate-utils';
 import {
-  CreateProfileInput,
-  CreateProfileOutput
+  CreateProfileServiceRequest,
+  CreateProfileUseCaseResponse
 } from './create-profile.service.interface';
+import { left, right } from '@/shared/types/either';
 
 export const createProfile = async (
-  input: CreateProfileInput
-): Promise<CreateProfileOutput> => {
+  input: CreateProfileServiceRequest
+): Promise<CreateProfileUseCaseResponse> => {
   const user = await findUserById(input.id);
 
   if (!user) {
-    throw new UserNotFoundError(input.id);
+    return left({
+      reason: 'User not found',
+      statusCode: 404
+    });
   }
 
   const normalizedRank = normalizeRank(input.body.rank);
@@ -51,7 +54,7 @@ export const createProfile = async (
     paymentDetails: updatedPaymentDetails
   });
 
-  return {
+  return right({
     message: 'Created'
-  };
+  });
 };

@@ -1,3 +1,7 @@
+/**
+ * @deprecated Use Either<Failure, R> pattern instead of throwing exceptions.
+ * Return left({ reason: 'Too many login attempts...', statusCode: 429 }) instead.
+ */
 export class TooManyTokensError extends Error {
   public readonly lastTokenTime: Date;
   public readonly retryAfter: Date;

@@ -1,5 +1,8 @@
 import { getConfig } from '@/shared/lib/config/env/get-env';
 import jwt from 'jsonwebtoken';
+import { left, right } from '@/shared/types/either';
+import type { Either } from '@/shared/types/either';
+import type { Failure } from '@/shared/types/failure.type';
 
 interface JwtPayload {
   id: string;
@@ -51,7 +54,7 @@ const generateTokenPair = (payload: JwtPayload): TokenPair => {
   };
 };
 
-const verifyToken = (token: string): JwtPayload => {
+const verifyToken = (token: string): Either<Failure, JwtPayload> => {
   try {
     const publicKey = getPublicKey();
 
@@ -60,15 +63,24 @@ const verifyToken = (token: string): JwtPayload => {
     const decoded = jwt.verify(splitToken, publicKey, {
       algorithms: ['RS256']
     });
-    return decoded as JwtPayload;
+    return right(decoded as JwtPayload);
   } catch (error) {
     if (error instanceof jwt.TokenExpiredError) {
-      throw new Error('Token expired');
+      return left({
+        reason: 'Token expired',
+        statusCode: 401
+      });
     }
     if (error instanceof jwt.JsonWebTokenError) {
-      throw new Error('Invalid token');
+      return left({
+        reason: 'Invalid token',
+        statusCode: 401
+      });
     }
-    throw error;
+    return left({
+      reason: 'Token verification failed',
+      statusCode: 401
+    });
   }
 };
 

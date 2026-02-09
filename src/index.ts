@@ -61,18 +61,8 @@ export const handler = async (
       body: JSON.stringify({ message: 'router not found' })
     };
   } catch (error) {
-    if (error instanceof Error && 'statusCode' in error) {
-      const response = {
-        statusCode: (error as any).statusCode,
-        body: JSON.stringify({
-          message: error.message,
-          error: (error as any).error
-        })
-      };
-      logger(event, response, error);
-      return response;
-    }
-
+    // Only unexpected runtime errors reach here
+    // All business logic errors are handled as Either returns in handlers
     const response = {
       statusCode: 500,
       body: JSON.stringify({

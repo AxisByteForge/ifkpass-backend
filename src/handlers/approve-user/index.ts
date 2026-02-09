@@ -1,13 +1,9 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 import { z } from 'zod';
-
-import {
-  UnauthorizedError,
-  ForbiddenException
-} from '@/shared/errors/http-errors';
 import { RequestHeaders } from '@/shared/types/headers.type';
 import { approveUser as approveUserService } from '@/services/approve-user/approve-user.service';
 import { verifyToken } from '@/infra/jwt/jwt.service';
+import { mapZodErrorToFailure } from '@/shared/utils/map-error-to-failure';
 
 const schema = z.object({
   userId: z.string(),
@@ -19,12 +15,25 @@ export const approveUser = async (
 ): Promise<APIGatewayProxyResult> => {
   try {
     const headers = event.headers as Partial<RequestHeaders>;
-    const token = await verifyToken(headers.Authorization ?? '');
+    const tokenResult = verifyToken(headers.Authorization ?? '');
+
+    if (tokenResult.isLeft()) {
+      const { reason, statusCode } = tokenResult.value;
+      return {
+        statusCode,
+        body: JSON.stringify({ message: reason })
+      };
+    }
+
+    const token = tokenResult.value;
 
     if (!token.isAdmin) {
-      throw new ForbiddenException(
-        'Administrador necessário para aprovar usuários'
-      );
+      return {
+        statusCode: 403,
+        body: JSON.stringify({
+          message: 'Administrator required to approve users'
+        })
+      };
     }
 
     const body = schema.parse(JSON.parse(event.body || '{}'));
@@ -33,39 +42,27 @@ export const approveUser = async (
       status: body.status
     });
 
+    if (result.isLeft()) {
+      const { reason, statusCode } = result.value;
+      return {
+        statusCode,
+        body: JSON.stringify({ message: reason })
+      };
+    }
+
     return {
       statusCode: 200,
-      body: JSON.stringify(result)
+      body: JSON.stringify(result.value)
     };
   } catch (error) {
-    if (
-      error instanceof UnauthorizedError ||
-      error instanceof ForbiddenException
-    ) {
-      throw error;
-    }
-
     if (error instanceof z.ZodError) {
+      const failure = mapZodErrorToFailure(error);
       return {
-        statusCode: 400,
-        body: JSON.stringify({
-          message: 'Validation error',
-          errors: error.flatten().fieldErrors
-        })
+        statusCode: failure.statusCode,
+        body: JSON.stringify({ message: failure.reason })
       };
     }
 
-    if (error instanceof Error && error.message.includes('não encontrado')) {
-      return {
-        statusCode: 404,
-        body: JSON.stringify({ message: error.message })
-      };
-    }
-
-    console.error('Error approving user:', error);
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ message: 'Erro interno ao aprovar usuário' })
-    };
+    throw error;
   }
 };

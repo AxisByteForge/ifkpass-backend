@@ -1,4 +1,7 @@
-export interface CreateUserInput {
+import type { Either } from '@/shared/types/either';
+import type { Failure } from '@/shared/types/failure.type';
+
+export interface CreateUserServiceRequest {
   name: string;
   lastName: string;
   email: string;
@@ -6,6 +9,4 @@ export interface CreateUserInput {
   isAdmin?: boolean;
 }
 
-export interface CreateUserOutput {
-  userId: string;
-}
+export type CreateUserUseCaseResponse = Either<Failure, string>;
