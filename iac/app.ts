@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import * as cdk from 'aws-cdk-lib';
 import { IfkpassApiStack } from './stacks/ifkpass-api-stack';
+import 'dotenv/config';
 
 const app = new cdk.App();
 
