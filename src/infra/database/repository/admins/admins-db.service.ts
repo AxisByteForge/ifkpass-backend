@@ -28,6 +28,20 @@ export const findAdminByEmail = async (
   return userDbData(admin[0]);
 };
 
+export const findAdminById = async (
+  id: string
+): Promise<AdminsDbData | null> => {
+  const admin = await db
+    .select()
+    .from(admins)
+    .where(eq(admins.id, id))
+    .limit(1);
+
+  if (!admin || admin.length === 0) return null;
+
+  return userDbData(admin[0]);
+};
+
 export const updateUserStatus = async (
   id: string,
   status: string

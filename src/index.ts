@@ -15,6 +15,7 @@ import { payCard } from './handlers/pay-card';
 import { sendPhoto } from './handlers/send-photo';
 
 import { signinUser } from './handlers/signin';
+import { refreshToken } from './handlers/refresh-token';
 
 export const handler = async (
   event: APIGatewayProxyEvent,
@@ -28,6 +29,7 @@ export const handler = async (
       '/api/v1/users/profile': createProfile,
       '/api/v1/users/profile/photo': sendPhoto,
       '/api/v1/users/auth': authenticate,
+      '/api/v1/users/refresh-token': refreshToken,
       '/api/v1/users/pay-card': payCard,
       '/api/v1/mercado-pago/webhook': mercadoPagoWebhook
     }

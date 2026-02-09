@@ -7,7 +7,8 @@ export interface AuthenticateServiceRequest {
 }
 
 export interface AuthenticateOutput {
-  token: string;
+  accessToken: string;
+  refreshToken: string;
 }
 
 export type AuthenticateUseCaseResponse = Either<Failure, AuthenticateOutput>;

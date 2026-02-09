@@ -7,7 +7,7 @@ import {
   findValidToken,
   markTokenAsUsed
 } from '@/infra/database/repository/authTokens/auth-tokens-db.service';
-import { generateAccessToken } from '@/infra/jwt/jwt.service';
+import { generateTokenPair } from '@/infra/jwt/jwt.service';
 import { findAdminByEmail } from '@/infra/database/repository/admins/admins-db.service';
 import { left, right } from '@/shared/types/either';
 import type { Either } from '@/shared/types/either';
@@ -65,13 +65,13 @@ export const authenticate = async (
   if (user.isAdmin) {
     await markTokenAsUsed(code);
 
-    const token = generateAccessToken({
+    const tokens = generateTokenPair({
       id: user.id,
       email: user.email,
       isAdmin: true
     });
 
-    return right({ token });
+    return right(tokens);
   }
 
   if (user.status === 'pending') {
@@ -90,7 +90,7 @@ export const authenticate = async (
 
   await markTokenAsUsed(code);
 
-  const token = generateAccessToken({ id: user.id, email: user.email });
+  const tokens = generateTokenPair({ id: user.id, email: user.email });
 
-  return right({ token });
+  return right(tokens);
 };
