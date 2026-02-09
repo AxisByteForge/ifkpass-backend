@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm';
+import { eq, count, asc } from 'drizzle-orm';
 import { db } from '@/shared/lib/db';
 
 import { UserDbData } from './user-db.interface';
@@ -116,4 +116,26 @@ export const updateUserStatus = async (
       updatedAt: new Date()
     })
     .where(eq(users.id, Id));
+};
+
+export const findUsersByStatus = async (
+  status: string,
+  limit = 50,
+  offset = 0
+): Promise<{ data: UserDbData[]; total: number }> => {
+  const [rows, totalResult] = await Promise.all([
+    db
+      .select()
+      .from(users)
+      .where(eq(users.status, status))
+      .orderBy(asc(users.createdAt))
+      .limit(limit)
+      .offset(offset),
+    db.select({ count: count() }).from(users).where(eq(users.status, status))
+  ]);
+
+  return {
+    data: rows.map(userDbData),
+    total: totalResult[0]?.count ?? 0
+  };
 };

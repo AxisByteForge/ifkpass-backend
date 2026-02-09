@@ -62,6 +62,33 @@ describe('PayCard Service', () => {
         expect(result.value.statusCode).toBe(403);
       }
     });
+
+    it('should return error when user is pending', async () => {
+      const mockUser = {
+        id: 'user-123',
+        email: 'user@example.com',
+        name: 'John',
+        lastName: 'Doe',
+        cpf: '12345678900',
+        phone: '11999999999',
+        status: 'pending',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+
+      vi.mocked(findUserById).mockResolvedValue(mockUser);
+
+      const result = await payCard({
+        userId: 'user-123',
+        action: 'create'
+      });
+
+      expect(result.isLeft()).toBe(true);
+      if (result.isLeft()) {
+        expect(result.value.reason).toContain('pending approval');
+        expect(result.value.statusCode).toBe(403);
+      }
+    });
   });
 
   describe('Payment Generation', () => {

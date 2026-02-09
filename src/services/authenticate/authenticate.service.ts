@@ -74,20 +74,6 @@ export const authenticate = async (
     return right(tokens);
   }
 
-  if (user.status === 'pending') {
-    return left({
-      reason: 'User not approved yet',
-      statusCode: 403
-    });
-  }
-
-  if (user.status === 'rejected') {
-    return left({
-      reason: 'User application was rejected',
-      statusCode: 403
-    });
-  }
-
   await markTokenAsUsed(code);
 
   const tokens = generateTokenPair({ id: user.id, email: user.email });

@@ -16,12 +16,16 @@ import { sendPhoto } from './handlers/send-photo';
 
 import { signinUser } from './handlers/signin';
 import { refreshToken } from './handlers/refresh-token';
+import { listPendingUsers } from './handlers/list-pending-users';
 
 export const handler = async (
   event: APIGatewayProxyEvent,
   context: Context
 ): Promise<APIGatewayProxyResult> => {
   const routes: any = {
+    GET: {
+      '/api/v1/admins/users/pending': listPendingUsers
+    },
     POST: {
       '/api/v1/admins/approve': approveUser,
       '/api/v1/users/signup': createUser,

@@ -38,6 +38,14 @@ export const payCard = async (
     });
   }
 
+  if (user.status === 'pending') {
+    return left({
+      reason:
+        'User application is still pending approval. Please wait for administrator review.',
+      statusCode: 403
+    });
+  }
+
   if (user.status === 'rejected') {
     return left({
       reason: 'User application was rejected. Please contact administration.',
