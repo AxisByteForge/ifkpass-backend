@@ -147,9 +147,7 @@ As variáveis de ambiente são configuradas no stack e podem ser sobrescritas us
 STAGE=dev
 REGION=us-east-1
 ACCOUNT_ID=972210179301
-COGNITO_CLIENT_ID=xxxxx
-COGNITO_CLIENT_SECRET=xxxxx
-COGNITO_USER_POOL_ID=xxxxx
+
 ```
 
 ### Configurações por Ambiente

@@ -2,31 +2,59 @@ import {
   findUserById,
   updateUser
 } from '@/infra/database/repository/user/user-db.service';
-import { UserNotFoundError } from '@/shared/errors/user-not-found-exception';
 import {
-  CreateProfileInput,
-  CreateProfileOutput
+  normalizeRank,
+  beltCategoryFromRank,
+  generateCardId
+} from '@/shared/utils/karate-utils';
+import {
+  CreateProfileServiceRequest,
+  CreateProfileUseCaseResponse
 } from './create-profile.service.interface';
+import { left, right } from '@/shared/types/either';
 
 export const createProfile = async (
-  input: CreateProfileInput
-): Promise<CreateProfileOutput> => {
-  const user = await findUserById(input.Id);
+  input: CreateProfileServiceRequest
+): Promise<CreateProfileUseCaseResponse> => {
+  const user = await findUserById(input.id);
 
   if (!user) {
-    throw new UserNotFoundError(input.Id);
+    return left({
+      reason: 'User not found',
+      statusCode: 404
+    });
   }
 
-  await updateUser(input.Id, {
+  const normalizedRank = normalizeRank(input.body.rank);
+  const cardId = generateCardId();
+  const now = new Date().toISOString();
+
+  // Prepare payment details update
+  const currentPaymentDetails = user.paymentDetails || {
+    alreadyPaid: false,
+    status: 'pending',
+    updatedAt: now
+  };
+
+  const updatedPaymentDetails = {
+    ...currentPaymentDetails,
+    rank: normalizedRank,
+    beltCategory: beltCategoryFromRank(normalizedRank),
+    updatedAt: now
+  };
+
+  await updateUser(input.id, {
     birthDate: input.body.birthDate,
     city: input.body.city,
     cpf: input.body.cpf,
     dojo: input.body.dojo,
-    rank: input.body.rank,
-    sensei: input.body.sensei
+    rank: normalizedRank,
+    sensei: input.body.sensei,
+    cardId,
+    paymentDetails: updatedPaymentDetails
   });
 
-  return {
+  return right({
     message: 'Created'
-  };
+  });
 };

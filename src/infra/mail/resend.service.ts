@@ -1,8 +1,8 @@
 import { Resend } from 'resend';
-import { getConfig } from '@/shared/lib/config/env/get-env';
 
 const getResendClient = (): Resend => {
-  const apiKey = getConfig('RESEND_API_KEY');
+  const apiKey = process.env.RESEND_API_KEY;
+
   return new Resend(apiKey);
 };
 
@@ -83,7 +83,7 @@ export const sendEmail = async (
   htmlContent: string
 ): Promise<string> => {
   const client = getResendClient();
-  const fromEmail = getConfig('RESEND_FROM_EMAIL');
+  const fromEmail = process.env.RESEND_FROM_EMAIL ?? '';
 
   const { data, error } = await client.emails.send({
     from: fromEmail,

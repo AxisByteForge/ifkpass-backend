@@ -1,6 +1,3 @@
-import { UserNotFoundError } from '@/shared/errors/user-not-found-exception';
-import { TooManyTokensError } from '@/shared/errors/too-many-tokens-error';
-
 import {
   countRecentTokens,
   createAuthToken,
@@ -10,64 +7,84 @@ import {
 import { findUserByEmail } from '@/infra/database/repository/user/user-db.service';
 import { generateCode } from '@/shared/utils/generateCode';
 import { getTokenExpiresAt } from '@/shared/utils/getTokenExpiresAt';
-import { SigninInput, SigninOutput } from './signin.service.interface';
+import {
+  SigninServiceRequest,
+  SigninUseCaseResponse
+} from './signin.service.interface';
 import { findAdminByEmail } from '@/infra/database/repository/admins/admins-db.service';
+import { left, right } from '@/shared/types/either';
+import type { Either } from '@/shared/types/either';
+import type { Failure } from '@/shared/types/failure.type';
+import { sendVerificationCode } from '@/infra/mail/resend.service';
 
-const isAdmin = async (email: string): Promise<any> => {
+const isAdmin = async (email: string): Promise<Either<Failure, any>> => {
   const admin = await findAdminByEmail(email);
 
   if (!admin) {
     const user = await findUserByEmail(email);
 
     if (!user) {
-      throw new UserNotFoundError(email);
+      return left({
+        reason: 'User not found',
+        statusCode: 404
+      });
     }
 
-    return {
-      Id: user.Id,
+    return right({
+      id: user.id,
       email: user.email,
       isAdmin: false
-    };
+    });
   }
 
-  return {
-    Id: admin.Id,
+  return right({
+    id: admin.id,
     email: admin.email,
     isAdmin: true
-  };
+  });
 };
 
 export const signinUserService = async (
-  input: SigninInput
-): Promise<SigninOutput | TooManyTokensError> => {
-  const user = await isAdmin(input.email);
+  input: SigninServiceRequest
+): Promise<SigninUseCaseResponse> => {
+  const userResult = await isAdmin(input.email);
 
-  const recentTokenCount = await countRecentTokens(user.Id);
+  if (userResult.isLeft()) {
+    return left(userResult.value);
+  }
+
+  const user = userResult.value;
+  const recentTokenCount = await countRecentTokens(user.id);
 
   if (recentTokenCount >= 2) {
     const lastTokenDate = await getLastLoginTokenCreatedAt(user);
 
     if (lastTokenDate) {
       const retryAfter = new Date(lastTokenDate.getTime() + 60 * 1000); // +1 minute
-      return new TooManyTokensError(lastTokenDate, retryAfter);
+      return left({
+        reason: `Too many login attempts. Please try again after ${retryAfter.toISOString()}`,
+        statusCode: 429
+      });
     }
   }
 
-  await invalidateLoginCodes(user.Id, user.isAdmin);
+  await invalidateLoginCodes(user.id, user.isAdmin);
 
   const code = generateCode();
 
-  await createAuthToken({
-    userId: user.isAdmin ? null : user.Id,
-    adminId: user.isAdmin ? user.Id : null,
-    token: code,
-    type: 'login_code',
-    expiresAt: getTokenExpiresAt()
-  });
+  await Promise.all([
+    createAuthToken({
+      userId: user.isAdmin ? null : user.id,
+      adminId: user.isAdmin ? user.id : null,
+      token: code,
+      type: 'login_code',
+      expiresAt: getTokenExpiresAt()
+    }),
 
-  // await sendVerificationCode(user.email, code);
+    sendVerificationCode(user.email, code)
+  ]);
 
-  return {
+  return right({
     message: 'Email verified successfully'
-  };
+  });
 };

@@ -2,16 +2,14 @@ import {
   findUserById,
   updateUser
 } from '@/infra/database/repository/user/user-db.service';
-import { PayCardInput, PayCardOutput } from './pay-card.service.interface';
+import {
+  PayCardServiceRequest,
+  PayCardUseCaseResponse
+} from './pay-card.service.interface';
 import { createCheckoutPreference } from '@/infra/mercado-pago/mercado-pago.service';
-
-const year = new Date().getFullYear();
-const DISCOUNT_DEADLINE = new Date(`${year}-03-08T23:59:59.999Z`);
-const CURRENCY = 'BRL';
-
-const isDiscountAvailable = (currentDate: Date): boolean => {
-  return currentDate.getTime() <= DISCOUNT_DEADLINE.getTime();
-};
+import { left, right } from '@/shared/types/either';
+import { isDiscountAvailable } from '@/shared/utils/isDiscountAvailabre';
+import { CURRENCY } from '@/shared/utils/consts';
 
 const computeAmount = (rank: string | undefined, now: Date): number => {
   const discount = isDiscountAvailable(now);
@@ -28,17 +26,23 @@ const getBeltCategory = (rank?: string): string => {
   return rank === 'Preta' ? 'black' : 'colored';
 };
 
-export const payCard = async (input: PayCardInput): Promise<PayCardOutput> => {
+export const payCard = async (
+  input: PayCardServiceRequest
+): Promise<PayCardUseCaseResponse> => {
   const user = await findUserById(input.userId);
 
   if (!user) {
-    throw new Error('Usuário não encontrado');
+    return left({
+      reason: 'User not found',
+      statusCode: 404
+    });
   }
 
   if (user.status === 'rejected') {
-    throw new Error(
-      'Usuário com inscrição rejeitada. Entre em contato com a administração.'
-    );
+    return left({
+      reason: 'User application was rejected. Please contact administration.',
+      statusCode: 403
+    });
   }
 
   const beltCategory = getBeltCategory(user.rank || undefined);
@@ -46,7 +50,10 @@ export const payCard = async (input: PayCardInput): Promise<PayCardOutput> => {
 
   if (input.action === 'complete-payment') {
     if (!input.paymentStatus) {
-      throw new Error('Status do pagamento é obrigatório.');
+      return left({
+        reason: 'Payment status is required',
+        statusCode: 400
+      });
     }
 
     if (
@@ -54,9 +61,9 @@ export const payCard = async (input: PayCardInput): Promise<PayCardOutput> => {
       currentPaymentDetails.paymentId === input.paymentId &&
       currentPaymentDetails.status === input.paymentStatus
     ) {
-      return {
-        message: 'Pagamento já processado anteriormente.'
-      };
+      return right({
+        message: 'Payment already processed.'
+      });
     }
 
     await updateUser(input.userId, {
@@ -64,21 +71,20 @@ export const payCard = async (input: PayCardInput): Promise<PayCardOutput> => {
         alreadyPaid: input.paymentStatus === 'approved',
         status: input.paymentStatus,
         paymentId: input.paymentId,
-        rank: user.rank || undefined,
+        rank: user.rank,
         beltCategory,
         updatedAt: new Date().toISOString()
       }
     });
 
-    return {
+    return right({
       message:
         input.paymentStatus === 'approved'
-          ? 'Pagamento confirmado com sucesso.'
-          : 'Pagamento não aprovado. Verifique o status na plataforma de pagamento.'
-    };
+          ? 'Payment confirmed successfully.'
+          : 'Payment not approved. Check status on payment platform.'
+    });
   }
 
-  // Gerar checkout
   const now = new Date();
   const amount = computeAmount(user.rank || undefined, now);
   const discountApplied = isDiscountAvailable(now);
@@ -115,7 +121,8 @@ export const payCard = async (input: PayCardInput): Promise<PayCardOutput> => {
     }
   });
 
-  return {
-    checkoutUrl: preference.initPoint || preference.sandboxInitPoint
-  };
+  return right({
+    checkoutUrl: preference.initPoint,
+    sandBoxUrl: preference.sandboxInitPoint
+  });
 };

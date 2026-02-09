@@ -54,38 +54,31 @@ export class IfkpassApiStack extends cdk.Stack {
 
     const environment: Record<string, string> = {
       STAGE: SERVICE_NAME,
-      PORT: '3333',
-      REGION,
-      ACCOUNT_ID: '972210179301',
       SERVICE: SERVICE_NAME,
       VERSION: '1.0.0',
+      NODE_ENV: process.env.NODE_ENV || 'dev',
+      PORT: process.env.PORT || '3333',
+      REGION: process.env.REGION || REGION,
+      ACCOUNT_ID: process.env.ACCOUNT_ID || '',
       // Database
       DATABASE_URL: process.env.DATABASE_URL || '',
-      // JWT
-      JWT_ACCESS_SECRET: process.env.JWT_ACCESS_SECRET || '',
-      JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET || '',
+      // JWT (legacy + RSA keys)
+      TOKEN_PREFIX: process.env.TOKEN_PREFIX || '',
+      JWT_EXPIRATION: process.env.JWT_EXPIRATION || '',
+      JWT_REFRESH_TOKEN_EXPIRATION:
+        process.env.JWT_REFRESH_TOKEN_EXPIRATION || '',
+      JWT_PRIVATE_KEY: process.env.JWT_PRIVATE_KEY || '',
+      JWT_PUBLIC_KEY: process.env.JWT_PUBLIC_KEY || '',
       // Email
       RESEND_API_KEY: process.env.RESEND_API_KEY || '',
-      RESEND_FROM_EMAIL:
-        process.env.RESEND_FROM_EMAIL || 'IFK Pass <onboarding@resend.dev>',
-      // Legacy Cognito (manter durante migração)
-      COGNITO_URL: 'https://cognito-idp.us-east-1.amazonaws.com',
-      COGNITO_CLIENT_ID: '6qo3c5ha69l7ecrrop64oqr5ev',
-      COGNITO_CLIENT_SECRET:
-        '1ukroluga9v6fchmrbuuh63hf7acsr0ts99k95um23anl2nlt5mj',
-      COGNITO_USER_POOL_ID: 'us-east-1_Cz8MRAcWv',
-      COGNITO_ADMINS_GROUP_NAME: 'admins',
-      USERS_TABLE_NAME: 'ifkpass-users',
+      RESEND_FROM_EMAIL: process.env.RESEND_FROM_EMAIL || '',
       // S3
-      PROFILE_BUCKET_NAME: 'ifkpass-profile-photos',
+      PROFILE_BUCKET_NAME: process.env.PROFILE_BUCKET_NAME || '',
       // Mercado Pago
-      MERCADO_PAGO_ACCESS_TOKEN:
-        'APP_USR-8144186796573046-110618-c771609734368200fbfd35c402d43b80-2971794673',
-      MERCADO_PAGO_PUBLIC_KEY: 'APP_USR-8a48b84f-78d4-4419-ab62-71ca336bde20',
-      MERCADO_PAGO_WEBHOOK_URL:
-        'https://k3d4il4asi.execute-api.us-east-1.amazonaws.com/ifkpass-api/mercado-pago/webhook',
-      MERCADO_PAGO_WEBHOOK_SECRET:
-        'b6c5590bf05bc50cfd4591fc75a47e9355dd933d98588055e4005fb9c464886a'
+      MERCADO_PAGO_ACCESS_TOKEN: process.env.MERCADO_PAGO_ACCESS_TOKEN || '',
+      MERCADO_PAGO_PUBLIC_KEY: process.env.MERCADO_PAGO_PUBLIC_KEY || '',
+      MERCADO_PAGO_WEBHOOK_URL: process.env.MERCADO_PAGO_WEBHOOK_URL || '',
+      MERCADO_PAGO_WEBHOOK_SECRET: process.env.MERCADO_PAGO_WEBHOOK_SECRET || ''
     };
 
     const proxyFunction = new lambda.Function(this, 'ProxyFunction', {
