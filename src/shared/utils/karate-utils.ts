@@ -1,8 +1,5 @@
 import { randomUUID } from 'node:crypto';
-import {
-  KARATE_RANKS,
-  type BeltCategory
-} from '@/shared/lib/config/karate-ranks';
+import { BeltCategory, KARATE_RANKS } from '../lib/config/karate-ranks';
 
 export function normalizeRank(rank?: string): string | undefined {
   if (!rank) return undefined;
