@@ -137,7 +137,7 @@ describe('PayCard Service', () => {
 
       await payCard({
         userId: 'user-123',
-        action: 'generate-payment'
+        action: 'generate-checkout'
       });
 
       expect(createCheckoutPreference).toHaveBeenCalledWith(
@@ -175,7 +175,7 @@ describe('PayCard Service', () => {
 
       await payCard({
         userId: 'user-123',
-        action: 'generate-payment'
+        action: 'generate-checkout'
       });
 
       expect(createCheckoutPreference).toHaveBeenCalledWith(
@@ -213,7 +213,7 @@ describe('PayCard Service', () => {
 
       await payCard({
         userId: 'user-123',
-        action: 'generate-payment'
+        action: 'generate-checkout'
       });
 
       expect(createCheckoutPreference).toHaveBeenCalledWith(

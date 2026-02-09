@@ -71,7 +71,7 @@ export const payCard = async (
         alreadyPaid: input.paymentStatus === 'approved',
         status: input.paymentStatus,
         paymentId: input.paymentId,
-        rank: user.rank || undefined,
+        rank: user.rank,
         beltCategory,
         updatedAt: new Date().toISOString()
       }

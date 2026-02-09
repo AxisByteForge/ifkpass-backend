@@ -1,4 +1,3 @@
-import { getConfig } from '@/shared/lib/config/env/get-env';
 import jwt from 'jsonwebtoken';
 import { left, right } from '@/shared/types/either';
 import type { Either } from '@/shared/types/either';
@@ -16,18 +15,14 @@ interface TokenPair {
 }
 
 const getPrivateKey = (): string => {
-  const privateKeyBase64 = getConfig('JWT_PRIVATE_KEY');
-  if (!privateKeyBase64) {
-    throw new Error('JWT_PRIVATE_KEY is not defined in environment variables');
-  }
+  const privateKeyBase64 = process.env.JWT_PRIVATE_KEY ?? '';
+
   return Buffer.from(privateKeyBase64, 'base64').toString('utf-8');
 };
 
 const getPublicKey = (): string => {
-  const publicKeyBase64 = getConfig('JWT_PUBLIC_KEY');
-  if (!publicKeyBase64) {
-    throw new Error('JWT_PUBLIC_KEY is not defined in environment variables');
-  }
+  const publicKeyBase64 = process.env.JWT_PUBLIC_KEY ?? '';
+
   return Buffer.from(publicKeyBase64, 'base64').toString('utf-8');
 };
 

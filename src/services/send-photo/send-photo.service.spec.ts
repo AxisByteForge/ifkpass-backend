@@ -1,16 +1,20 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
-vi.mock('@/shared/lib/config/env/get-env', () => ({
-  getConfig: vi.fn(() => 'test-bucket-name')
-}));
-vi.mock('@/infra/storage/s3.service');
-
 import { sendPhoto } from './send-photo.service';
 import { getPresignedUploadUrl } from '@/infra/storage/s3.service';
+
+process.env.REGION = 'us-test-1';
+process.env.PROFILE_BUCKET_NAME = 'test-bucket-name';
+
+vi.mock('@/infra/storage/s3.service', () => ({
+  s3Client: {},
+  getPresignedUploadUrl: vi.fn()
+}));
 
 describe('SendPhoto Service', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    process.env.PROFILE_BUCKET_NAME = 'test-bucket-name';
   });
 
   describe('Photo Upload URL Generation', () => {

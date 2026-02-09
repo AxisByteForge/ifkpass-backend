@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+
 import { handler } from './index';
 import type { APIGatewayProxyEvent, Context } from 'aws-lambda';
 import { logger } from '@/shared/utils/logger';
@@ -15,6 +16,10 @@ import { refreshToken } from './handlers/refresh-token';
 vi.mock('@/shared/lib/db', () => ({
   db: {}
 }));
+vi.mock('@/infra/storage/s3.service', () => ({
+  s3Client: {},
+  getPresignedUploadUrl: vi.fn()
+}));
 vi.mock('@/shared/utils/logger');
 vi.mock('./handlers/approve-user');
 vi.mock('./handlers/authenticate');
@@ -25,6 +30,9 @@ vi.mock('./handlers/pay-card');
 vi.mock('./handlers/send-photo');
 vi.mock('./handlers/signin');
 vi.mock('./handlers/refresh-token');
+
+process.env.REGION = 'us-test-1';
+process.env.PROFILE_BUCKET_NAME = 'test-bucket-name';
 
 describe('Lambda Handler', () => {
   let mockEvent: APIGatewayProxyEvent;
