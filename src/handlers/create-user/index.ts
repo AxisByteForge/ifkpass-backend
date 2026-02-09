@@ -6,9 +6,7 @@ import { mapZodErrorToFailure } from '@/shared/utils/map-error-to-failure';
 export const schema = z.object({
   name: z.string(),
   lastName: z.string(),
-  email: z.string().email(),
-  password: z.string(),
-  isAdmin: z.boolean().optional().default(false)
+  email: z.string().email()
 });
 
 export const createUser = async (

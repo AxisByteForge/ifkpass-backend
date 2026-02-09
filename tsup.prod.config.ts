@@ -11,11 +11,8 @@ export default defineConfig({
   sourcemap: false,
   dts: true,
   clean: true,
-  external: [
-    /^@aws-sdk\//,
-    /@\/infra\/database/,
-    /@\/services\//,
-    /@\/shared\//
-  ],
-  tsconfig: './tsconfig.json'
+  noExternal: [/.*/],
+  external: [/^@aws-sdk\//],
+  tsconfig: './tsconfig.json',
+  onSuccess: 'tsc --noEmit'
 });

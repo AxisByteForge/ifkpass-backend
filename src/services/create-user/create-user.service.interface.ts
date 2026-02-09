@@ -5,7 +5,6 @@ export interface CreateUserServiceRequest {
   name: string;
   lastName: string;
   email: string;
-  isAdmin?: boolean;
 }
 
 export type CreateUserUseCaseResponse = Either<Failure, string>;
