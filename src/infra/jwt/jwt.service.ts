@@ -30,7 +30,7 @@ const generateAccessToken = (payload: JwtPayload): string => {
   const privateKey = getPrivateKey();
   return jwt.sign(payload, privateKey, {
     algorithm: 'RS256',
-    expiresIn: '15m'
+    expiresIn: process.env.JWT_EXPIRATION as any
   });
 };
 
@@ -38,7 +38,7 @@ const generateRefreshToken = (payload: JwtPayload): string => {
   const privateKey = getPrivateKey();
   return jwt.sign(payload, privateKey, {
     algorithm: 'RS256',
-    expiresIn: '7d'
+    expiresIn: process.env.JWT_REFRESH_TOKEN_EXPIRATION as any
   });
 };
 
@@ -52,8 +52,9 @@ const generateTokenPair = (payload: JwtPayload): TokenPair => {
 const verifyToken = (token: string): Either<Failure, JwtPayload> => {
   try {
     const publicKey = getPublicKey();
+    const tokenPrefix = process.env.TOKEN_PREFIX as string;
 
-    const splitToken = token.split('Bearer ')[1] || token;
+    const splitToken = token.split(tokenPrefix)[1] || token;
 
     const decoded = jwt.verify(splitToken, publicKey, {
       algorithms: ['RS256']
