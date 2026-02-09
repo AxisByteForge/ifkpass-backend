@@ -3,7 +3,7 @@ import type { Failure } from '@/shared/types/failure.type';
 
 export interface PayCardServiceRequest {
   userId: string;
-  action: 'generate-checkout' | 'complete-payment';
+  action: 'create' | 'generate-checkout' | 'complete-payment';
   paymentStatus?: 'approved' | 'pending' | 'rejected';
   paymentId?: string;
 }

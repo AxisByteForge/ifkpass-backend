@@ -122,6 +122,7 @@ export const payCard = async (
   });
 
   return right({
-    checkoutUrl: preference.initPoint || preference.sandboxInitPoint
+    checkoutUrl: preference.initPoint,
+    sandBoxUrl: preference.sandboxInitPoint
   });
 };

@@ -6,7 +6,7 @@ import { verifyToken } from '@/infra/jwt/jwt.service';
 import { mapZodErrorToFailure } from '@/shared/utils/map-error-to-failure';
 
 const schema = z.object({
-  action: z.enum(['generate-checkout', 'complete-payment']),
+  action: z.enum(['create', 'generate-checkout', 'complete-payment']),
   paymentStatus: z.enum(['approved', 'pending', 'rejected']).optional(),
   paymentId: z.string().optional()
 });
