@@ -72,15 +72,17 @@ export const signinUserService = async (
 
   const code = generateCode();
 
-  await createAuthToken({
-    userId: user.isAdmin ? null : user.id,
-    adminId: user.isAdmin ? user.id : null,
-    token: code,
-    type: 'login_code',
-    expiresAt: getTokenExpiresAt()
-  });
+  await Promise.all([
+    createAuthToken({
+      userId: user.isAdmin ? null : user.id,
+      adminId: user.isAdmin ? user.id : null,
+      token: code,
+      type: 'login_code',
+      expiresAt: getTokenExpiresAt()
+    }),
 
-  await sendVerificationCode(user.email, code);
+    sendVerificationCode(user.email, code)
+  ]);
 
   return right({
     message: 'Email verified successfully'
