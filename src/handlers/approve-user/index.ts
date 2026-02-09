@@ -1,15 +1,12 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 import { z } from 'zod';
-import { verifyToken } from '@/shared/lib/jwt/jose/jose.jwt';
-import {
-  UnauthorizedError,
-  ForbiddenException
-} from '@/shared/errors/http-errors';
 import { RequestHeaders } from '@/shared/types/headers.type';
 import { approveUser as approveUserService } from '@/services/approve-user/approve-user.service';
+import { verifyToken } from '@/infra/jwt/jwt.service';
+import { mapZodErrorToFailure } from '@/shared/utils/map-error-to-failure';
 
 const schema = z.object({
-  Id: z.string(),
+  userId: z.string(),
   status: z.enum(['approved', 'rejected'])
 });
 
@@ -18,54 +15,54 @@ export const approveUser = async (
 ): Promise<APIGatewayProxyResult> => {
   try {
     const headers = event.headers as Partial<RequestHeaders>;
-    const token = await verifyToken(headers.Authorization);
+    const tokenResult = verifyToken(headers.Authorization ?? '');
+
+    if (tokenResult.isLeft()) {
+      const { reason, statusCode } = tokenResult.value;
+      return {
+        statusCode,
+        body: JSON.stringify({ message: reason })
+      };
+    }
+
+    const token = tokenResult.value;
 
     if (!token.isAdmin) {
-      throw new ForbiddenException(
-        'Administrador necessário para aprovar usuários'
-      );
-    }
-
-    const body = schema.parse(JSON.parse(event.body || '{}'));
-    const result = await approveUserService({
-      adminId: token.Id,
-      Id: body.Id,
-      status: body.status
-    });
-
-    return {
-      statusCode: 200,
-      body: JSON.stringify(result)
-    };
-  } catch (error) {
-    if (
-      error instanceof UnauthorizedError ||
-      error instanceof ForbiddenException
-    ) {
-      throw error;
-    }
-
-    if (error instanceof z.ZodError) {
       return {
-        statusCode: 400,
+        statusCode: 403,
         body: JSON.stringify({
-          message: 'Validation error',
-          errors: error.flatten().fieldErrors
+          message: 'Administrator required to approve users'
         })
       };
     }
 
-    if (error instanceof Error && error.message.includes('não encontrado')) {
+    const body = schema.parse(JSON.parse(event.body || '{}'));
+    const result = await approveUserService({
+      userId: body.userId,
+      status: body.status
+    });
+
+    if (result.isLeft()) {
+      const { reason, statusCode } = result.value;
       return {
-        statusCode: 404,
-        body: JSON.stringify({ message: error.message })
+        statusCode,
+        body: JSON.stringify({ message: reason })
       };
     }
 
-    console.error('Error approving user:', error);
     return {
-      statusCode: 500,
-      body: JSON.stringify({ message: 'Erro interno ao aprovar usuário' })
+      statusCode: 200,
+      body: JSON.stringify(result.value)
     };
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      const failure = mapZodErrorToFailure(error);
+      return {
+        statusCode: failure.statusCode,
+        body: JSON.stringify({ message: failure.reason })
+      };
+    }
+
+    throw error;
   }
 };

@@ -1,6 +1,9 @@
-export interface PayCardInput {
+import type { Either } from '@/shared/types/either';
+import type { Failure } from '@/shared/types/failure.type';
+
+export interface PayCardServiceRequest {
   userId: string;
-  action: 'generate-checkout' | 'complete-payment';
+  action: 'create' | 'generate-checkout' | 'complete-payment';
   paymentStatus?: 'approved' | 'pending' | 'rejected';
   paymentId?: string;
 }
@@ -26,5 +29,8 @@ export enum KarateRank {
 
 export interface PayCardOutput {
   checkoutUrl?: string;
+  sandBoxUrl?: string;
   message?: string;
 }
+
+export type PayCardUseCaseResponse = Either<Failure, PayCardOutput>;

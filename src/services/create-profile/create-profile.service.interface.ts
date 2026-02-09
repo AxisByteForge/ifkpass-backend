@@ -1,5 +1,8 @@
-export interface CreateProfileInput {
-  Id: string;
+import type { Either } from '@/shared/types/either';
+import type { Failure } from '@/shared/types/failure.type';
+
+export interface CreateProfileServiceRequest {
+  id: string;
   body: {
     birthDate: string;
     city: string;
@@ -13,3 +16,5 @@ export interface CreateProfileInput {
 export interface CreateProfileOutput {
   message: string;
 }
+
+export type CreateProfileUseCaseResponse = Either<Failure, CreateProfileOutput>;

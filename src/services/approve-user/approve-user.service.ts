@@ -3,28 +3,26 @@ import {
   updateUserStatus
 } from '@/infra/database/repository/user/user-db.service';
 import type {
-  ApproveUserInput,
-  ApproveUserOutput
+  ApproveUserServiceRequest,
+  ApproveUserUseCaseResponse
 } from './approve-user.service.interface';
+import { left, right } from '@/shared/types/either';
 
 export const approveUser = async (
-  input: ApproveUserInput
-): Promise<ApproveUserOutput> => {
-  const admin = await findUserById(input.adminId);
-
-  if (!admin || !admin.isAdmin) {
-    throw new Error('Usuário não possui privilégios de administrador');
-  }
-
-  const user = await findUserById(input.Id);
+  input: ApproveUserServiceRequest
+): Promise<ApproveUserUseCaseResponse> => {
+  const user = await findUserById(input.userId);
 
   if (!user) {
-    throw new Error(`Usuário com ID ${input.Id} não encontrado`);
+    return left({
+      reason: `User with ID ${input.userId} not found`,
+      statusCode: 404
+    });
   }
 
-  await updateUserStatus(input.Id, input.status);
+  await updateUserStatus(input.userId, input.status);
 
-  return {
+  return right({
     message: `User ${input.status === 'approved' ? 'approved' : 'rejected'} successfully`
-  };
+  });
 };

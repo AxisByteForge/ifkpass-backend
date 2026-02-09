@@ -15,6 +15,7 @@ import { payCard } from './handlers/pay-card';
 import { sendPhoto } from './handlers/send-photo';
 
 import { signinUser } from './handlers/signin';
+import { refreshToken } from './handlers/refresh-token';
 
 export const handler = async (
   event: APIGatewayProxyEvent,
@@ -28,6 +29,7 @@ export const handler = async (
       '/api/v1/users/profile': createProfile,
       '/api/v1/users/profile/photo': sendPhoto,
       '/api/v1/users/auth': authenticate,
+      '/api/v1/users/refresh-token': refreshToken,
       '/api/v1/users/pay-card': payCard,
       '/api/v1/mercado-pago/webhook': mercadoPagoWebhook
     }
@@ -61,18 +63,8 @@ export const handler = async (
       body: JSON.stringify({ message: 'router not found' })
     };
   } catch (error) {
-    if (error instanceof Error && 'statusCode' in error) {
-      const response = {
-        statusCode: (error as any).statusCode,
-        body: JSON.stringify({
-          message: error.message,
-          error: (error as any).error
-        })
-      };
-      logger(event, response, error);
-      return response;
-    }
-
+    // Only unexpected runtime errors reach here
+    // All business logic errors are handled as Either returns in handlers
     const response = {
       statusCode: 500,
       body: JSON.stringify({

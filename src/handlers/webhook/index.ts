@@ -1,5 +1,4 @@
 import { APIGatewayProxyEvent } from 'aws-lambda';
-
 import { getPayment } from '@/infra/mercado-pago/mercado-pago.service';
 import { payCard } from '@/services/pay-card/pay-card.service';
 
@@ -17,7 +16,6 @@ function extractPaymentId(
 
 async function mercadoPagoWebhook(event: APIGatewayProxyEvent) {
   try {
-    // const headers = event.headers;
     const body = event.body ? JSON.parse(event.body) : {};
 
     const paymentId = extractPaymentId(event, body);
@@ -26,14 +24,10 @@ async function mercadoPagoWebhook(event: APIGatewayProxyEvent) {
       return {
         statusCode: 400,
         body: JSON.stringify({
-          message: 'Identificador do pagamento não informado.'
+          message: 'Payment identifier not provided.'
         })
       };
     }
-
-    // const secretKey = config.get('MERCADO_PAGO_WEBHOOK_SECRET');
-
-    // validateOrigin(headers as RequestHeaders, paymentId ?? '', secretKey);
 
     const payment = await getPayment(paymentId);
 
@@ -41,7 +35,7 @@ async function mercadoPagoWebhook(event: APIGatewayProxyEvent) {
       return {
         statusCode: 400,
         body: JSON.stringify({
-          message: 'Pagamento sem usuário associado.'
+          message: 'Payment without associated user.'
         })
       };
     }
@@ -53,11 +47,19 @@ async function mercadoPagoWebhook(event: APIGatewayProxyEvent) {
       paymentId
     });
 
+    if (result.isLeft()) {
+      const { reason, statusCode } = result.value;
+      return {
+        statusCode,
+        body: JSON.stringify({ message: reason })
+      };
+    }
+
     return {
       statusCode: 200,
       body: JSON.stringify({
-        message: 'Pagamento sincronizado com sucesso.',
-        result
+        message: 'Payment synchronized successfully.',
+        result: result.value
       })
     };
   } catch (error) {
@@ -67,7 +69,7 @@ async function mercadoPagoWebhook(event: APIGatewayProxyEvent) {
         message:
           error instanceof Error
             ? error.message
-            : 'Erro interno ao processar webhook do Mercado Pago.'
+            : 'Internal error processing Mercado Pago webhook.'
       })
     };
   }
