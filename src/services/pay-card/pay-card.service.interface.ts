@@ -29,6 +29,7 @@ export enum KarateRank {
 
 export interface PayCardOutput {
   checkoutUrl?: string;
+  sandBoxUrl?: string;
   message?: string;
 }
 

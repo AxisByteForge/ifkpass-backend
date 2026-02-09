@@ -5,7 +5,6 @@ export interface CreateUserServiceRequest {
   name: string;
   lastName: string;
   email: string;
-  password: string;
   isAdmin?: boolean;
 }
 
