@@ -57,12 +57,14 @@ export const signinUserService = async (
   const recentTokenCount = await countRecentTokens(user.id);
 
   if (recentTokenCount >= 2) {
-    const lastTokenDate = await getLastLoginTokenCreatedAt(user);
+    const lastTokenDate = await getLastLoginTokenCreatedAt(user.id);
 
     if (lastTokenDate) {
       const retryAfter = new Date(lastTokenDate.getTime() + 60 * 1000); // +1 minute
       return left({
-        reason: `Too many login attempts. Please try again after ${retryAfter.toISOString()}`,
+        lastTokenTime: lastTokenDate.toISOString(),
+        retryAfter: retryAfter.toISOString(),
+        reason: `Too many login attempts`,
         statusCode: 429
       });
     }

@@ -7,6 +7,7 @@ import {
   beltCategoryFromRank,
   generateCardId
 } from '@/shared/utils/karate-utils';
+import { normalizePhone } from '@/shared/utils/normalizePhone';
 import {
   CreateProfileServiceRequest,
   CreateProfileUseCaseResponse
@@ -40,6 +41,7 @@ export const createProfile = async (
     ...currentPaymentDetails,
     rank: normalizedRank,
     beltCategory: beltCategoryFromRank(normalizedRank),
+    cardId,
     updatedAt: now
   };
 
@@ -50,6 +52,8 @@ export const createProfile = async (
     dojo: input.body.dojo,
     rank: normalizedRank,
     sensei: input.body.sensei,
+    photoUrl: input.body.photoUrl,
+    phone: normalizePhone(input.body.phone),
     cardId,
     paymentDetails: updatedPaymentDetails
   });

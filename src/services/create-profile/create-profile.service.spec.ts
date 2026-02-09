@@ -9,12 +9,14 @@ import {
   beltCategoryFromRank,
   generateCardId
 } from '@/shared/utils/karate-utils';
+import { normalizePhone } from '@/shared/utils/normalizePhone';
 
 vi.mock('@/shared/lib/db', () => ({
   db: {}
 }));
 vi.mock('@/infra/database/repository/user/user-db.service');
 vi.mock('@/shared/utils/karate-utils');
+vi.mock('@/shared/utils/normalizePhone');
 
 const mockUser = {
   id: 'user-123',
@@ -34,6 +36,9 @@ describe('CreateProfile Service', () => {
     vi.mocked(normalizeRank).mockReturnValue('Amarela');
     vi.mocked(beltCategoryFromRank).mockReturnValue('colored');
     vi.mocked(generateCardId).mockReturnValue('CARD-123456');
+    vi.mocked(normalizePhone).mockImplementation((phone) =>
+      phone.replace(/\D/g, '')
+    );
   });
 
   describe('Profile Creation', () => {
@@ -49,7 +54,9 @@ describe('CreateProfile Service', () => {
           cpf: '12345678900',
           dojo: 'Dojo São Paulo',
           rank: 'amarela',
-          sensei: 'Sensei Name'
+          sensei: 'Sensei Name',
+          phone: '11999999999',
+          photoUrl: 'http://example.com/photo.jpg'
         }
       });
 
@@ -87,7 +94,9 @@ describe('CreateProfile Service', () => {
           cpf: '12345678900',
           dojo: 'Dojo São Paulo',
           rank: 'amarela',
-          sensei: 'Sensei Name'
+          sensei: 'Sensei Name',
+          phone: '11999999999',
+          photoUrl: 'http://example.com/photo.jpg'
         }
       });
 
@@ -115,7 +124,9 @@ describe('CreateProfile Service', () => {
           cpf: '12345678900',
           dojo: 'Dojo São Paulo',
           rank: 'amarela',
-          sensei: 'Sensei Name'
+          sensei: 'Sensei Name',
+          phone: '11999999999',
+          photoUrl: 'http://example.com/photo.jpg'
         }
       });
 
@@ -127,6 +138,7 @@ describe('CreateProfile Service', () => {
             status: 'pending',
             rank: 'Amarela',
             beltCategory: 'colored',
+            cardId: 'CARD-123456',
             updatedAt: expect.any(String)
           })
         })
@@ -163,7 +175,9 @@ describe('CreateProfile Service', () => {
           cpf: '12345678900',
           dojo: 'Dojo São Paulo',
           rank: 'verde',
-          sensei: 'Sensei Name'
+          sensei: 'Sensei Name',
+          phone: '11999999999',
+          photoUrl: 'http://example.com/photo.jpg'
         }
       });
 
@@ -175,7 +189,8 @@ describe('CreateProfile Service', () => {
             status: 'approved',
             paymentId: 'payment-123',
             rank: 'Amarela',
-            beltCategory: 'colored'
+            beltCategory: 'colored',
+            cardId: 'CARD-123456'
           })
         })
       );
@@ -195,7 +210,9 @@ describe('CreateProfile Service', () => {
           cpf: '12345678900',
           dojo: 'Dojo São Paulo',
           rank: 'amarela',
-          sensei: 'Sensei Name'
+          sensei: 'Sensei Name',
+          phone: '11999999999',
+          photoUrl: 'http://example.com/photo.jpg'
         }
       });
 
@@ -204,6 +221,62 @@ describe('CreateProfile Service', () => {
         'user-123',
         expect.objectContaining({
           cardId: 'CARD-123456'
+        })
+      );
+    });
+  });
+
+  describe('Phone Normalization', () => {
+    it('should normalize phone number removing non-digits', async () => {
+      vi.mocked(findUserById).mockResolvedValue(mockUser);
+      vi.mocked(updateUser).mockResolvedValue();
+
+      await createProfile({
+        id: 'user-123',
+        body: {
+          birthDate: '1990-01-01',
+          city: 'São Paulo',
+          cpf: '12345678900',
+          dojo: 'Dojo São Paulo',
+          rank: 'amarela',
+          sensei: 'Sensei Name',
+          phone: '(11) 98765-4321',
+          photoUrl: 'http://example.com/photo.jpg'
+        }
+      });
+
+      expect(normalizePhone).toHaveBeenCalledWith('(11) 98765-4321');
+      expect(updateUser).toHaveBeenCalledWith(
+        'user-123',
+        expect.objectContaining({
+          phone: '11987654321'
+        })
+      );
+    });
+
+    it('should normalize phone with country code', async () => {
+      vi.mocked(findUserById).mockResolvedValue(mockUser);
+      vi.mocked(updateUser).mockResolvedValue();
+
+      await createProfile({
+        id: 'user-123',
+        body: {
+          birthDate: '1990-01-01',
+          city: 'São Paulo',
+          cpf: '12345678900',
+          dojo: 'Dojo São Paulo',
+          rank: 'amarela',
+          sensei: 'Sensei Name',
+          phone: '+55 11 98765-4321',
+          photoUrl: 'http://example.com/photo.jpg'
+        }
+      });
+
+      expect(normalizePhone).toHaveBeenCalledWith('+55 11 98765-4321');
+      expect(updateUser).toHaveBeenCalledWith(
+        'user-123',
+        expect.objectContaining({
+          phone: '5511987654321'
         })
       );
     });

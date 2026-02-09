@@ -104,7 +104,7 @@ describe('PayCard Service', () => {
 
       expect(createCheckoutPreference).toHaveBeenCalledWith(
         expect.objectContaining({
-          unitPrice: 80
+          unitPrice: 85
         })
       );
     });
@@ -142,7 +142,7 @@ describe('PayCard Service', () => {
 
       expect(createCheckoutPreference).toHaveBeenCalledWith(
         expect.objectContaining({
-          unitPrice: 50
+          unitPrice: 55
         })
       );
     });
@@ -180,7 +180,7 @@ describe('PayCard Service', () => {
 
       expect(createCheckoutPreference).toHaveBeenCalledWith(
         expect.objectContaining({
-          unitPrice: 100
+          unitPrice: 105
         })
       );
     });
@@ -218,7 +218,7 @@ describe('PayCard Service', () => {
 
       expect(createCheckoutPreference).toHaveBeenCalledWith(
         expect.objectContaining({
-          unitPrice: 80
+          unitPrice: 85
         })
       );
     });
@@ -257,11 +257,12 @@ describe('PayCard Service', () => {
       expect(result.isRight()).toBe(true);
       expect(createCheckoutPreference).toHaveBeenCalledWith(
         expect.objectContaining({
-          unitPrice: 80,
+          unitPrice: 85,
           metadata: expect.objectContaining({
             userId: 'user-123',
             rank: 'Não informado',
-            beltCategory: 'colored'
+            beltCategory: 'colored',
+            cardId: 'CARD-123'
           }),
           idempotencyKey: 'CARD-123'
         })
@@ -306,11 +307,12 @@ describe('PayCard Service', () => {
             alreadyPaid: false,
             status: 'pending',
             preferenceId: 'pref-456',
-            amount: 50,
+            amount: 55,
             currency: 'BRL',
             discountApplied: true,
             rank: 'Verde',
-            beltCategory: 'colored'
+            beltCategory: 'colored',
+            cardId: 'CARD-123'
           })
         })
       );
@@ -349,6 +351,9 @@ describe('PayCard Service', () => {
 
       expect(createCheckoutPreference).toHaveBeenCalledWith(
         expect.objectContaining({
+          metadata: expect.objectContaining({
+            cardId: 'UNIQUE-CARD-ID'
+          }),
           idempotencyKey: 'UNIQUE-CARD-ID'
         })
       );
@@ -387,6 +392,9 @@ describe('PayCard Service', () => {
 
       expect(createCheckoutPreference).toHaveBeenCalledWith(
         expect.objectContaining({
+          metadata: expect.objectContaining({
+            cardId: 'Não informado'
+          }),
           idempotencyKey: undefined
         })
       );
@@ -402,6 +410,7 @@ describe('PayCard Service', () => {
         phone: '11999999999',
         status: 'approved',
         rank: 'Verde',
+        cardId: 'CARD-XYZ',
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
         paymentDetails: {
@@ -431,7 +440,8 @@ describe('PayCard Service', () => {
         'user-123',
         expect.objectContaining({
           paymentDetails: expect.objectContaining({
-            alreadyPaid: true
+            alreadyPaid: true,
+            cardId: 'CARD-XYZ'
           })
         })
       );
@@ -450,7 +460,17 @@ describe('PayCard Service', () => {
         status: 'approved',
         rank: 'Verde',
         createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
+        updatedAt: new Date().toISOString(),
+        paymentDetails: {
+          amount: 85,
+          currency: 'BRL',
+          preferenceId: 'pref-123',
+          discountApplied: false,
+          status: 'pending',
+          alreadyPaid: false,
+          cardId: 'CARD-123',
+          updatedAt: new Date().toISOString()
+        }
       };
 
       vi.mocked(findUserById).mockResolvedValue(mockUser);
@@ -474,7 +494,12 @@ describe('PayCard Service', () => {
           paymentDetails: expect.objectContaining({
             alreadyPaid: true,
             status: 'approved',
-            paymentId: 'payment-123'
+            paymentId: 'payment-123',
+            cardId: 'CARD-123',
+            amount: 85,
+            currency: 'BRL',
+            preferenceId: 'pref-123',
+            discountApplied: false
           })
         })
       );
@@ -491,7 +516,17 @@ describe('PayCard Service', () => {
         status: 'approved',
         rank: 'Verde',
         createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
+        updatedAt: new Date().toISOString(),
+        paymentDetails: {
+          amount: 55,
+          currency: 'BRL',
+          preferenceId: 'pref-456',
+          discountApplied: true,
+          status: 'pending',
+          alreadyPaid: false,
+          cardId: 'CARD-456',
+          updatedAt: new Date().toISOString()
+        }
       };
 
       vi.mocked(findUserById).mockResolvedValue(mockUser);
@@ -514,7 +549,12 @@ describe('PayCard Service', () => {
         expect.objectContaining({
           paymentDetails: expect.objectContaining({
             alreadyPaid: false,
-            status: 'rejected'
+            status: 'rejected',
+            cardId: 'CARD-456',
+            amount: 55,
+            currency: 'BRL',
+            preferenceId: 'pref-456',
+            discountApplied: true
           })
         })
       );
@@ -531,7 +571,17 @@ describe('PayCard Service', () => {
         status: 'approved',
         rank: 'Verde',
         createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
+        updatedAt: new Date().toISOString(),
+        paymentDetails: {
+          amount: 85,
+          currency: 'BRL',
+          preferenceId: 'pref-789',
+          discountApplied: false,
+          status: 'pending',
+          alreadyPaid: false,
+          cardId: 'CARD-789',
+          updatedAt: new Date().toISOString()
+        }
       };
 
       vi.mocked(findUserById).mockResolvedValue(mockUser);
@@ -556,7 +606,12 @@ describe('PayCard Service', () => {
         expect.objectContaining({
           paymentDetails: expect.objectContaining({
             alreadyPaid: false,
-            status: 'pending'
+            status: 'pending',
+            cardId: 'CARD-789',
+            amount: 85,
+            currency: 'BRL',
+            preferenceId: 'pref-789',
+            discountApplied: false
           })
         })
       );
@@ -625,6 +680,49 @@ describe('PayCard Service', () => {
       }
 
       expect(updateUser).not.toHaveBeenCalled();
+    });
+
+    it('should use default values when payment details are missing', async () => {
+      const mockUser = {
+        id: 'user-123',
+        email: 'user@example.com',
+        name: 'John',
+        lastName: 'Doe',
+        cpf: '12345678900',
+        phone: '11999999999',
+        status: 'approved',
+        rank: 'Verde',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+
+      vi.mocked(findUserById).mockResolvedValue(mockUser);
+      vi.mocked(updateUser).mockResolvedValue();
+
+      const result = await payCard({
+        userId: 'user-123',
+        action: 'complete-payment',
+        paymentStatus: 'approved',
+        paymentId: 'payment-123'
+      });
+
+      expect(result.isRight()).toBe(true);
+
+      expect(updateUser).toHaveBeenCalledWith(
+        'user-123',
+        expect.objectContaining({
+          paymentDetails: expect.objectContaining({
+            alreadyPaid: true,
+            status: 'approved',
+            paymentId: 'payment-123',
+            cardId: '',
+            amount: 0,
+            currency: '',
+            preferenceId: '',
+            discountApplied: false
+          })
+        })
+      );
     });
   });
 });
